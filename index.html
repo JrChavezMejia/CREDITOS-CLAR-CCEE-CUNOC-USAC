@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Planificación CLAR – CCEE 2025</title>
+
+  <!-- Tailwind CSS v2 (para mantener tus clases originales) -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+
+  <!-- jsPDF + AutoTable (para PDF) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- SheetJS (xlsx) para Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- docx.js + FileSaver.js para Word -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.2.0/docx.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <style>
+    /* Tus estilos originales, ajustados si hace falta */
+    body { font-size: 18px; line-height: 1.6; color: #333; }
+    h1 { font-size: 2.5rem !important; }
+    p, label, input, select, button { font-size: 1rem; }
+    .max-w-6xl { max-width: 900px; }
+    .bg-blue-800 { background-color: #0B3D91; }
+    .text-blue-800 { color: #0B3D91; }
+    .border-blue-700 { border-color: #0B3D91; }
+    .table-header { background-color: #0B3D91 !important; color: white !important; }
+    .shadow-2xl {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                  0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .tooltip-container { position: relative; display: inline-block; cursor: help; }
+    .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltip-container:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 font-sans" onload="cargarDatosGuardados()">
+
+  <div class="max-w-6xl mx-auto mt-10 bg-white p-10 rounded-2xl shadow-2xl">
+
+    <!-- ==================================================
+         TÍTULO PRINCIPAL Y DIRECTOR/COORDINADORES
+    =================================================== -->
+    <div class="flex items-center justify-center mb-6">
+      <h1 class="text-3xl font-extrabold text-center text-blue-800 uppercase">
+        GUÍA PARA PROGRAMAR CRÉDITOS CLAR EN LA DIVISIÓN DE CCEE DEL CUNOC-USAC
+      </h1>
+    </div>
+    <p class="text-left text-sm text-gray-700 mb-6 border-b pb-4">
+      <strong>Director:</strong><br>
+      Dr. Edgar Vidal Camposeco Pérez.<br>
+      <strong>Coordinadores:</strong><br>
+      M. Sc. Julio César López De León, Contaduría Pública y Auditoría.<br>
+      Dr. Walter Alfredo Santizo López, Administración de Empresas.<br>
+      M. Sc. Julio Rodolfo Lima Ochoa, Economía.<br>
+      M. Sc. Mauro Sierra Hengstemberg, Área Común.<br>
+      <strong>Diseño:</strong><br>
+      M. Sc. Luz Maria Lima Soto.<br>  
+      Dr. José Rodolfo Chávez Mejía.
+    </p>
+
+    <!-- ============================================
+         FORMULARIO: Información General + Configuración
+    ============================================= -->
+    <form id="clarForm" class="space-y-8">
+
+      <!-- 1. Información General del Curso -->
+      <div class="border p-6 rounded-lg shadow-sm bg-blue-50">
+        <h2 class="text-xl font-bold text-blue-700 mb-4">1. Información General del Curso</h2>
+        <p class="text-gray-600 mb-6">Complete los detalles básicos del curso para iniciar la planificación.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="tooltip-container">
+            <input name="docente" placeholder="Nombre completo del docente" required
+              class="w-full border p-3 rounded-md shadow"/>
+            <span class="tooltip-text">Ingrese el nombre completo del docente a cargo del curso.</span>
+          </div>
+          <div class="tooltip-container">
+            <input name="nombre" placeholder="Nombre completo del curso" required
+              class="w-full border p-3 rounded-md shadow"/>
+            <span class="tooltip-text">Escriba el nombre oficial del curso.</span>
+          </div>
+          <div class="tooltip-container">
+            <input name="anio" type="number" placeholder="Año académico (ej: 2025)" required
+              class="w-full border p-3 rounded-md shadow"/>
+            <span class="tooltip-text">Indique el año en que se impartirá el curso.</span>
+          </div>
+          <div class="tooltip-container">
+            <input name="codigo" placeholder="Código del curso (ej: C001)" required
+              class="w-full border p-3 rounded-md shadow"/>
+            <span class="tooltip-text">Ingrese el código único asignado al curso.</span>
+          </div>
+          <div class="tooltip-container">
+            <select name="carrera" required class="w-full border p-3 rounded-md shadow">
+              <option value="">Seleccione la carrera</option>
+              <option>Contaduría Pública y Auditoría</option>
+              <option>Administración de Empresas</option>
+              <option>Economía</option>
+              <option>Área Común</option>
+            </select>
+            <span class="tooltip-text">Elija la carrera a la que pertenece este curso.</span>
+          </div>
+          <div class="tooltip-container">
+            <select name="ciclo_academico" required class="w-full border p-3 rounded-md shadow">
+              <option value="">Seleccione el ciclo académico</option>
+              <option>Primer semestre</option>
+              <option>Segundo semestre</option>
+            </select>
+            <span class="tooltip-text">Indique si es el primer o segundo semestre del año.</span>
+          </div>
+          <div class="tooltip-container">
+            <select name="seccion" required class="w-full border p-3 rounded-md shadow">
+              <option value="">Seleccione la sección</option>
+              <option>A</option><option>B</option><option>C</option>
+              <option>D</option><option>E</option><option>F</option><option>G</option>
+            </select>
+            <span class="tooltip-text">Seleccione la sección del curso.</span>
+          </div>
+          <div class="tooltip-container">
+            <select name="semestre" required class="w-full border p-3 rounded-md shadow">
+              <option value="">Seleccione el semestre (ej: 1, 5, 10)</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option>
+              <option>5</option><option>6</option><option>7</option><option>8</option>
+              <option>9</option><option>10</option>
+            </select>
+            <span class="tooltip-text">Indique el número de semestre en el plan de estudios.</span>
+          </div>
+          <div class="tooltip-container">
+            <input name="duracion" id="duracion" type="number" min="1"
+              placeholder="Duración del curso (en semanas)" required
+              class="w-full border p-3 rounded-md shadow"/>
+            <span class="tooltip-text">Ingrese la cantidad de semanas que durará el curso (ej: 16 semanas).</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Configuración de la Planificación -->
+      <div class="border p-6 rounded-lg shadow-sm bg-blue-50">
+        <h2 class="text-xl font-bold text-blue-700 mb-4">2. Configuración de la Planificación</h2>
+        <p class="text-gray-600 mb-6">Defina cómo desea estructurar las horas de trabajo del estudiante.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <!-- Unidad de tiempo -->
+          <div class="tooltip-container">
+            <label class="block font-semibold mb-2">Unidad de tiempo:</label>
+            <select id="unidadTiempo" class="w-full border p-3 rounded-md shadow">
+              <option value="horas">Horas</option>
+              <option value="minutos">Minutos</option>
+            </select>
+            <span class="tooltip-text">Elija si ingresará las horas en horas o en minutos.</span>
+          </div>
+
+          <!-- Botón para generar la tabla -->
+          <div class="flex items-end">
+            <button type="button" onclick="generarSemanas()"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-800 w-full font-bold transition duration-300">
+              Generar Semanas de Planificación
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- ============================================
+         Contenedor de la tabla y totales (oculto al inicio)
+    ============================================= -->
+    <div id="planContainer" class="mt-8 hidden border p-6 rounded-lg shadow-sm bg-green-50">
+      <h2 class="text-xl font-bold text-green-700 mb-4">3. Planificación Detallada por Semanas</h2>
+      <p class="text-gray-600 mb-6">Ingrese el contenido de cada semana y distribuya las horas de trabajo.</p>
+
+      <!-- Tabla de planificación -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-300 rounded-md overflow-hidden">
+          <thead class="bg-blue-700 text-white">
+            <tr>
+              <th class="py-3 px-4 border text-left">Semana</th>
+              <th class="py-3 px-4 border text-left">Contenido / Temática</th>
+              <th class="py-3 px-4 border text-left">Distribución de Horas</th>
+              <th class="py-3 px-4 border">Eliminar</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyPlan"></tbody>
+        </table>
+      </div>
+
+      <!-- Inputs de totales finales -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Total Horas Presenciales:</label>
+          <input id="horasPresencialesFinal" disabled
+            class="w-full border p-3 rounded-md bg-gray-100 text-lg font-bold"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Total Horas Autónomas:</label>
+          <input id="horasAutonomasFinal" disabled
+            class="w-full border p-3 rounded-md bg-gray-100 text-lg font-bold"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Total Horas Prácticas:</label>
+          <input id="horasPracticasFinal" disabled
+            class="w-full border p-3 rounded-md bg-gray-100 text-lg font-bold"/>
+        </div>
+      </div>
+
+      <!-- Resumen de totales y créditos -->
+      <div class="mt-6 space-y-2 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800">
+        <p id="totalHoras" class="text-xl font-bold"></p>
+        <p id="creditos" class="text-xl font-extrabold"></p>
+        <p class="text-sm text-gray-600">
+          * Recuerde: 1 crédito CLAR equivale a 24 horas totales de trabajo del estudiante.
+        </p>
+      </div>
+
+      <!-- Botones de exportación -->
+      <div class="mt-8 flex flex-wrap gap-4 justify-center">
+        <button onclick="exportarPDF()"
+          class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-800 font-bold transition duration-300 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M5 4a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2H5zm0 2h8v6H5V6zm2 5a1 1 0 100 2h4a1 1 0 100-2H7z"/>  
+          </svg>
+          Exportar a PDF
+        </button>
+        <button onclick="exportarWord()"
+          class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-800 font-bold transition duration-300 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 4a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h8v6H4V6zm2 5a1 1 0 100 2h4a1 1 0 100-2H6z"/>
+          </svg>
+          Exportar a Word
+        </button>
+        <button onclick="exportarExcel()"
+          class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-800 font-bold transition duration-300 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0-8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0-8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
+          </svg>
+          Exportar a Excel
+        </button>
+      </div>
+
+      <!-- Enlace al GPT para continuar el proceso -->
+      <div class="mt-8 text-center">
+        <p class="text-lg font-semibold mb-2">Luego de generar y guardar su PDF:</p>
+        <a href="https://chatgpt.com/g/g-680a5c371d108191b42f4dad3d5842a3-asistente-virtual-clar-para-ccee-cunoc" 
+           target="_blank"
+           class="text-blue-600 hover:text-blue-800 underline font-bold text-lg">
+          Suba su documento al Creador de Programas CLAR
+        </a>
+      </div>
+    </div>
+
+  </div> <!-- /contenedor completo -->
+
+  <!-- ============================================
+       JAVASCRIPT (funciones de generación, totales y exportaciones)
+  ============================================= -->
+  <script>
+    // ---------------------------------
+    // Función para guardar todos los datos del formulario
+    // ---------------------------------
+    function guardarDatos() {
+      // Guardar datos del formulario principal
+      const formData = new FormData(document.getElementById('clarForm'));
+      const formObject = {};
+      formData.forEach((value, key) => formObject[key] = value);
+      localStorage.setItem('formData', JSON.stringify(formObject));
+
+      // Guardar datos de la planificación
+      const planData = [];
+      document.querySelectorAll('#tbodyPlan tr').forEach(tr => {
+        const semana = tr.querySelector('td:nth-child(1) input').value;
+        const contenido = tr.querySelector('td:nth-child(2) textarea').value;
+        const presencial = tr.querySelector('td:nth-child(3) input[data-tipo="presencial"]').value;
+        const practica = tr.querySelector('td:nth-child(3) input[data-tipo="practica"]').value;
+        const autonomo = tr.querySelector('td:nth-child(3) input[data-tipo="autonomo"]').value;
+        
+        planData.push({
+          semana,
+          contenido,
+          presencial,
+          practica,
+          autonomo
+        });
+      });
+      localStorage.setItem('planData', JSON.stringify(planData));
+
+      // Guardar configuración
+      const config = {
+        unidadTiempo: document.getElementById('unidadTiempo').value
+      };
+      localStorage.setItem('config', JSON.stringify(config));
+    }
+
+    // ---------------------------------
+    // Función para cargar los datos guardados
+    // ---------------------------------
+    function cargarDatosGuardados() {
+      // Cargar datos del formulario principal
+      const savedForm = JSON.parse(localStorage.getItem('formData'));
+      if (savedForm) {
+        Object.keys(savedForm).forEach(key => {
+          const element = document.querySelector(`[name="${key}"]`);
+          if (element) element.value = savedForm[key];
+        });
+      }
+
+      // Cargar configuración
+      const savedConfig = JSON.parse(localStorage.getItem('config'));
+      if (savedConfig) {
+        document.getElementById('unidadTiempo').value = savedConfig.unidadTiempo;
+      }
+
+      // Cargar planificación si existe
+      const savedPlan = JSON.parse(localStorage.getItem('planData'));
+      if (savedPlan && savedPlan.length > 0) {
+        // Establecer duración basada en los datos guardados
+        document.getElementById('duracion').value = savedPlan.length;
+        
+        // Generar las semanas (esto mostrará el contenedor)
+        generarSemanas();
+
+        // Llenar los datos de cada semana
+        savedPlan.forEach((semana, index) => {
+          const tr = document.querySelectorAll('#tbodyPlan tr')[index];
+          if (tr) {
+            tr.querySelector('td:nth-child(1) input').value = semana.semana;
+            tr.querySelector('td:nth-child(2) textarea').value = semana.contenido;
+            tr.querySelector('td:nth-child(3) input[data-tipo="presencial"]').value = semana.presencial;
+            tr.querySelector('td:nth-child(3) input[data-tipo="practica"]').value = semana.practica;
+            tr.querySelector('td:nth-child(3) input[data-tipo="autonomo"]').value = semana.autonomo;
+          }
+        });
+
+        // Actualizar totales
+        actualizarTotales();
+      }
+    }
+
+    // ---------------------------------
+    // Función: Generar filas de planificación (solo modo semana)
+    // ---------------------------------
+    function generarSemanas() {
+      const dur = parseInt(document.getElementById('duracion').value, 10);
+      if (!dur || dur < 1) {
+        alert("Por favor, ingrese una duración válida del curso (mínimo 1 semana).");
+        return;
+      }
+      
+      const tbody = document.getElementById("tbodyPlan");
+      tbody.innerHTML = ""; // Limpiar antes de generar
+
+      // Recorrer cada semana
+      for (let i = 1; i <= dur; i++) {
+        const tr = document.createElement("tr");
+
+        // 1) Columna: Semana X
+        const tdSemana = document.createElement("td");
+        tdSemana.className = "border px-2 py-1 align-top";
+        tdSemana.innerHTML = `
+          <input type="text" class="w-full border p-1 rounded-md text-base" value="Semana ${i}" />
+        `;
+        tr.appendChild(tdSemana);
+
+        // 2) Columna: Contenido/Temática
+        const tdContenido = document.createElement("td");
+        tdContenido.className = "border px-2 py-1 align-top";
+        tdContenido.innerHTML = `
+          <textarea class="w-full border p-1 rounded-md text-base" rows="3"
+            placeholder="Describa el contenido o temática de la semana"></textarea>
+        `;
+        tr.appendChild(tdContenido);
+
+        // 3) Columna: Distribución de Horas (solo modo semana)
+        const tdHoras = document.createElement("td");
+        tdHoras.className = "border px-2 py-1";
+        tdHoras.innerHTML = `
+          <div class="grid grid-cols-1">
+            <div class="grid grid-cols-3 bg-gray-100 font-semibold text-sm text-center border-b py-1">
+              <div>Presencial</div>
+              <div>Práctica</div>
+              <div>Autónomo</div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-2">
+              <input type="number" step="0.1" value="0" placeholder="Horas Presenciales"
+                class="w-full border p-2 horas rounded-md text-center" data-tipo="presencial"/>
+              <input type="number" step="0.1" value="0" placeholder="Horas Prácticas"
+                class="w-full border p-2 horas rounded-md text-center" data-tipo="practica"/>
+              <input type="number" step="0.1" value="0" placeholder="Horas Autónomas"
+                class="w-full border p-2 horas rounded-md text-center" data-tipo="autonomo"/>
+            </div>
+          </div>
+        `;
+        tr.appendChild(tdHoras);
+
+        // 4) Columna: Botón para eliminar fila
+        const tdEliminar = document.createElement("td");
+        tdEliminar.className = "border px-2 py-1 text-center align-middle";
+        tdEliminar.innerHTML = `
+          <button type="button" class="text-red-600 hover:text-red-800 font-bold text-xl leading-none">X</button>
+        `;
+        tdEliminar.querySelector("button").onclick = () => {
+          tr.remove();
+          actualizarTotales();
+          guardarDatos();
+        };
+        tr.appendChild(tdEliminar);
+
+        // Añadir la fila completa al tbody
+        tbody.appendChild(tr);
+      }
+
+      // Registrar event listeners en los inputs de horas
+      document.querySelectorAll('.horas').forEach(inputHora => {
+        inputHora.addEventListener('input', function() {
+          actualizarTotales();
+          guardarDatos();
+        });
+      });
+
+      // Mostrar el contenedor
+      document.getElementById("planContainer").classList.remove("hidden");
+
+      // Calcular totales por primera vez
+      actualizarTotales();
+
+      // Guardar los datos
+      guardarDatos();
+    }
+
+    // ---------------------------------
+    // Función: Recalcular totales y créditos
+    // ---------------------------------
+    function actualizarTotales() {
+      const unidad = document.getElementById('unidadTiempo').value; // "horas" o "minutos"
+
+      // Variables crudas y convertidas
+      let presRaw = 0, practRaw = 0, autoRaw = 0;
+      let presHoras = 0, practHoras = 0, autoHoras = 0;
+
+      // Recorrer todos los inputs con clase "horas"
+      document.querySelectorAll('.horas').forEach(inputHora => {
+        const v = parseFloat(inputHora.value) || 0;
+        // Convertir a horas si es que la unidad actual es "minutos"
+        const valorHoras = (unidad === 'minutos') ? (v / 60) : v;
+        const tipo = inputHora.dataset.tipo; // "presencial" | "practica" | "autonomo"
+
+        if (tipo === 'presencial') {
+          presRaw += v;
+          presHoras += valorHoras;
+        } else if (tipo === 'practica') {
+          practRaw += v;
+          practHoras += valorHoras;
+        } else if (tipo === 'autonomo') {
+          autoRaw += v;
+          autoHoras += valorHoras;
+        }
+      });
+
+      // Total en horas convertidas
+      const totalHorasEnHoras = presHoras + practHoras + autoHoras;
+      // Total en la unidad cruda (horas o minutos) para mostrar en tarjetas
+      const totalRaw = presRaw + practRaw + autoRaw;
+
+      // Créditos CLAR (1 crédito = 24 horas)
+      const creditos = (totalHorasEnHoras / 24).toFixed(2);
+
+      // Actualizar las tarjetas de totales
+      const cardPres = document.getElementById('horasPresencialesFinal');
+      const cardPrac = document.getElementById('horasPracticasFinal');
+      const cardAuto = document.getElementById('horasAutonomasFinal');
+      if (unidad === 'minutos') {
+        cardPres.value = presRaw.toFixed(2) + ' minutos';
+        cardPrac.value = practRaw.toFixed(2) + ' minutos';
+        cardAuto.value = autoRaw.toFixed(2) + ' minutos';
+      } else {
+        cardPres.value = presRaw.toFixed(2) + ' horas';
+        cardPrac.value = practRaw.toFixed(2) + ' horas';
+        cardAuto.value = autoRaw.toFixed(2) + ' horas';
+      }
+
+      // Actualizar el resumen grande
+      const textoTotalHoras = document.getElementById('totalHoras');
+      const textoCreditos = document.getElementById('creditos');
+      if (unidad === 'minutos') {
+        textoTotalHoras.innerText =
+          `Total de minutos de trabajo del estudiante: ${totalRaw.toFixed(2)} minutos ` +
+          `(equivale a ${totalHorasEnHoras.toFixed(2)} horas)`;
+      } else {
+        textoTotalHoras.innerText =
+          `Total de horas de trabajo del estudiante: ${totalHorasEnHoras.toFixed(2)} horas`;
+      }
+      textoCreditos.innerText = `Créditos CLAR Calculados: ${creditos}`;
+    }
+
+    // ---------------------------------
+    // Función: Exportar a PDF (jsPDF + AutoTable)
+    // ---------------------------------
+    function exportarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });
+
+      // Título en la parte superior
+      doc.setFontSize(18);
+      doc.setTextColor('#0B3D91');
+      doc.text('Planificación Créditos CLAR – CCEE 2025', 40, 30);
+
+      // Encabezados de la tabla con estilo
+      const encabezados = [
+        { content: 'Semana', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } },
+        { content: 'Contenido / Temática', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } },
+        { content: 'Horas Presenciales', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } },
+        { content: 'Horas Prácticas', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } },
+        { content: 'Horas Autónomas', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } }
+      ];
+
+      // Construir las filas de datos de la tabla
+      const filas = [];
+      document.querySelectorAll('#tbodyPlan tr').forEach(tr => {
+        const celdas = tr.querySelectorAll('td');
+        const semana = celdas[0]?.querySelector('input')?.value || '';
+        const contenido = celdas[1]?.querySelector('textarea')?.value || '';
+        let p = 0, pr = 0, a = 0;
+        if (celdas[2]) {
+          celdas[2].querySelectorAll('input.horas').forEach(input => {
+            const v = parseFloat(input.value) || 0;
+            if (input.dataset.tipo === 'presencial') p += v;
+            if (input.dataset.tipo === 'practica')   pr += v;
+            if (input.dataset.tipo === 'autonomo')   a += v;
+          });
+        }
+        const unidad = document.getElementById('unidadTiempo').value;
+        filas.push([
+          semana,
+          contenido,
+          p.toFixed(2) + ' ' + unidad,
+          pr.toFixed(2) + ' ' + unidad,
+          a.toFixed(2) + ' ' + unidad
+        ]);
+      });
+
+      // Generar la tabla en el PDF
+      doc.autoTable({
+        head: [encabezados],
+        body: filas,
+        startY: 60,
+        theme: 'striped',
+        headStyles: { fontStyle: 'bold', halign: 'center' },
+        bodyStyles: { valign: 'middle' },
+        columnStyles: {
+          0: { cellWidth: 60 },
+          1: { cellWidth: 160 }
+          // El resto se ajusta automáticamente
+        },
+        margin: { left: 40, right: 40 }
+      });
+
+      // Resumen final: totales y créditos
+      const finalY = doc.lastAutoTable.finalY + 20;
+      doc.setFontSize(12);
+      doc.setTextColor('#000000');
+      doc.text(document.getElementById('totalHoras').innerText, 40, finalY);
+      doc.text(document.getElementById('creditos').innerText, 40, finalY + 20);
+
+      // Pie de página con número de página
+      const totalPag = doc.getNumberOfPages();
+      for (let i = 1; i <= totalPag; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150);
+        doc.text(`Página ${i} de ${totalPag}`, doc.internal.pageSize.width - 60, doc.internal.pageSize.height - 30);
+      }
+
+      doc.save('planificacion_CLAR.pdf');
+      alert("¡Documento PDF exportado con éxito!");
+    }
+
+    // ---------------------------------
+    // Función: Exportar a Word (.docx) con docx.js
+    // ---------------------------------
+    async function exportarWord() {
+      const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, AlignmentType, BorderStyle, ShadingType, WidthType } = docx;
+
+      // Crear nuevo documento
+      const doc = new Document({ sections: [] });
+
+      // Título
+      const titulo = new Paragraph({
+        alignment: AlignmentType.CENTER,
+        children: [
+          new TextRun({ text: "Planificación Créditos CLAR – CCEE 2025", bold: true, color: "0B3D91", size: 36 })
+        ]
+      });
+
+      // Preparar fila de resumen (totales, créditos y fecha)
+      const fechaHoy = new Date().toLocaleDateString("es-GT");
+      const filasResumen = [
+        ["Total de Horas", document.getElementById('totalHoras').innerText],
+        ["Créditos CLAR", document.getElementById('creditos').innerText],
+        ["Fecha de Exportación", fechaHoy]
+      ];
+
+      // Construir tabla de resumen
+      const tablaResumen = new Table({
+        rows: filasResumen.map((fila, idx) => new TableRow({
+          children: fila.map(texto => new TableCell({
+            width: { size: 50, type: WidthType.PERCENTAGE },
+            shading: idx === 0 ? { fill: "0B3D91", color: "auto", type: ShadingType.SOLID } : undefined,
+            borders: {
+              top:    { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
+              bottom: { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
+              left:   { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
+              right:  { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" }
+            },
+            children: [ new Paragraph({
+              children: [ new TextRun({ text: texto, bold: idx === 0, color: idx === 0 ? "FFFFFF" : "000000", size: 24 }) ]
+            }) ]
+          }))
+        }))
+      });
+
+      // Construir filas para la planificación
+      const encabezadosPlan = ["Semana", "Contenido / Temática", "Horas Presenciales", "Horas Prácticas", "Horas Autónomas"];
+      const filasPlan = [encabezadosPlan];
+      document.querySelectorAll('#tbodyPlan tr').forEach(tr => {
+        const cols = tr.querySelectorAll('td');
+        const semana = cols[0]?.querySelector('input')?.value || "N/A";
+        const contenido = cols[1]?.querySelector('textarea')?.value || "N/A";
+        let p = 0, pr = 0, a = 0;
+        if (cols[2]) {
+          cols[2].querySelectorAll('input.horas').forEach(input => {
+            const v = parseFloat(input.value) || 0;
+            if (input.dataset.tipo === 'presencial') p += v;
+            if (input.dataset.tipo === 'practica')   pr += v;
+            if (input.dataset.tipo === 'autonomo')   a += v;
+          });
+        }
+        const unidad = document.getElementById('unidadTiempo').value;
+        filasPlan.push([
+          semana,
+          contenido,
+          p.toFixed(2) + " " + unidad,
+          pr.toFixed(2) + " " + unidad,
+          a.toFixed(2) + " " + unidad
+        ]);
+      });
+
+      const tablaPlan = new Table({
+        rows: filasPlan.map((fila, idx) => new TableRow({
+          children: fila.map(texto => new TableCell({
+            borders: {
+              top:    { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
+              bottom: { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
+              left:   { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
+              right:  { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" }
+            },
+            shading: idx === 0 ? { fill: "0B3D91", color: "auto", type: ShadingType.SOLID } : undefined,
+            children: [ new Paragraph({
+              children: [ new TextRun({ text: texto, bold: idx === 0, color: idx === 0 ? "FFFFFF" : "000000", size: idx === 0 ? 24 : 20 }) ]
+            }) ]
+          }))
+        }))
+      });
+
+      // Añadir secciones
+      doc.addSection({
+        children: [
+          titulo,
+          new Paragraph({ text: "", spacing: { after: 300 } }),
+          new Paragraph({ text: "Resumen de Totales:", heading: "HEADING_2" }),
+          tablaResumen,
+          new Paragraph({ text: "", spacing: { after: 300 } })
+        ]
+      });
+      doc.addSection({
+        children: [
+          new Paragraph({ text: "Planificación Detallada por Semanas:", heading: "HEADING_2" }),
+          tablaPlan
+        ]
+      });
+
+      // Generar Blob y descarga
+      const blob = await Packer.toBlob(doc);
+      saveAs(blob, "planificacion_CLAR.docx");
+      alert("¡Documento Word exportado con éxito!");
+    }
+
+    // ---------------------------------
+    // Función: Exportar a Excel (.xlsx) con SheetJS
+    // ---------------------------------
+    function exportarExcel() {
+      const wb = XLSX.utils.book_new();
+      const fechaHoy = new Date().toLocaleDateString("es-GT");
+
+      // Hoja "Resumen"
+      const datosResumen = [
+        ["Total de Horas", document.getElementById('totalHoras').innerText],
+        ["Créditos CLAR", document.getElementById('creditos').innerText],
+        ["Fecha de Exportación", fechaHoy]
+      ];
+      const wsResumen = XLSX.utils.aoa_to_sheet(datosResumen);
+      wsResumen['!cols'] = [{wch: 30}, {wch: 50}];
+      XLSX.utils.book_append_sheet(wb, wsResumen, "Resumen");
+
+      // Hoja "Planificación"
+      const encabezados = ["Semana", "Contenido / Temática", "Horas Presenciales", "Horas Prácticas", "Horas Autónomas"];
+      const datosPlan = [encabezados];
+      document.querySelectorAll('#tbodyPlan tr').forEach(tr => {
+        const cols = tr.querySelectorAll('td');
+        const semana = cols[0]?.querySelector('input')?.value || "N/A";
+        const contenido = cols[1]?.querySelector('textarea')?.value || "N/A";
+        let p = 0, pr = 0, a = 0;
+        if (cols[2]) {
+          cols[2].querySelectorAll('input.horas').forEach(input => {
+            const v = parseFloat(input.value) || 0;
+            if (input.dataset.tipo === 'presencial') p += v;
+            if (input.dataset.tipo === 'practica')   pr += v;
+            if (input.dataset.tipo === 'autonomo')   a += v;
+          });
+        }
+        const unidad = document.getElementById('unidadTiempo').value;
+        datosPlan.push([
+          semana,
+          contenido,
+          p.toFixed(2) + " " + unidad,
+          pr.toFixed(2) + " " + unidad,
+          a.toFixed(2) + " " + unidad
+        ]);
+      });
+      const wsPlan = XLSX.utils.aoa_to_sheet(datosPlan);
+      wsPlan['!cols'] = [
+        {wch: 15},  // Semana
+        {wch: 40},  // Contenido
+        {wch: 20},  // Horas Presenciales
+        {wch: 20},  // Horas Prácticas
+        {wch: 20}   // Horas Autónomas
+      ];
+      XLSX.utils.book_append_sheet(wb, wsPlan, "Planificación");
+
+      XLSX.writeFile(wb, "planificacion_CLAR.xlsx");
+      alert("¡Documento Excel exportado con éxito!");
+    }
+
+    // Event listeners para guardar datos automáticamente
+    document.addEventListener('DOMContentLoaded', function() {
+      // Guardar datos cuando cambian los inputs del formulario principal
+      document.querySelectorAll('#clarForm input, #clarForm select, #clarForm textarea').forEach(element => {
+        element.addEventListener('change', guardarDatos);
+      });
+
+      // Guardar datos cuando cambia la unidad de tiempo
+      document.getElementById('unidadTiempo').addEventListener('change', function() {
+        guardarDatos();
+        actualizarTotales();
+      });
+    });
+  </script>
+</body>
+</html>
