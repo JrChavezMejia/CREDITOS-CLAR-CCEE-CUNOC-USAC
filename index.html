@@ -5,22 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Planificación CLAR – CCEE 2025</title>
 
-  <!-- Tailwind CSS v2 (para mantener tus clases originales) -->
+  <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
 
-  <!-- jsPDF + AutoTable (para PDF) -->
+  <!-- jsPDF + AutoTable -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
-  <!-- SheetJS (xlsx) para Excel -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-  <!-- docx.js + FileSaver.js para Word -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.2.0/docx.umd.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
   <style>
-    /* Tus estilos originales, ajustados si hace falta */
     body { font-size: 18px; line-height: 1.6; color: #333; }
     h1 { font-size: 2.5rem !important; }
     p, label, input, select, button { font-size: 1rem; }
@@ -61,9 +53,7 @@
 
   <div class="max-w-6xl mx-auto mt-10 bg-white p-10 rounded-2xl shadow-2xl">
 
-    <!-- ==================================================
-         TÍTULO PRINCIPAL Y DIRECTOR/COORDINADORES
-    =================================================== -->
+    <!-- TÍTULO PRINCIPAL Y DIRECTOR/COORDINADORES -->
     <div class="flex items-center justify-center mb-6">
       <h1 class="text-3xl font-extrabold text-center text-blue-800 uppercase">
         GUÍA PARA PROGRAMAR CRÉDITOS CLAR EN LA DIVISIÓN DE CCEE DEL CUNOC-USAC
@@ -82,9 +72,7 @@
       Dr. José Rodolfo Chávez Mejía.
     </p>
 
-    <!-- ============================================
-         FORMULARIO: Información General + Configuración
-    ============================================= -->
+    <!-- FORMULARIO: Información General + Configuración -->
     <form id="clarForm" class="space-y-8">
 
       <!-- 1. Información General del Curso -->
@@ -183,9 +171,7 @@
       </div>
     </form>
 
-    <!-- ============================================
-         Contenedor de la tabla y totales (oculto al inicio)
-    ============================================= -->
+    <!-- Contenedor de la tabla y totales (oculto al inicio) -->
     <div id="planContainer" class="mt-8 hidden border p-6 rounded-lg shadow-sm bg-green-50">
       <h2 class="text-xl font-bold text-green-700 mb-4">3. Planificación Detallada por Semanas</h2>
       <p class="text-gray-600 mb-6">Ingrese el contenido de cada semana y distribuya las horas de trabajo.</p>
@@ -233,7 +219,7 @@
         </p>
       </div>
 
-      <!-- Botones de exportación -->
+      <!-- Botones de exportación (solo PDF) -->
       <div class="mt-8 flex flex-wrap gap-4 justify-center">
         <button onclick="exportarPDF()"
           class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-800 font-bold transition duration-300 flex items-center">
@@ -241,20 +227,6 @@
             <path d="M5 4a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2H5zm0 2h8v6H5V6zm2 5a1 1 0 100 2h4a1 1 0 100-2H7z"/>  
           </svg>
           Exportar a PDF
-        </button>
-        <button onclick="exportarWord()"
-          class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-800 font-bold transition duration-300 flex items-center">
-          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M4 4a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2H4zm0 2h8v6H4V6zm2 5a1 1 0 100 2h4a1 1 0 100-2H6z"/>
-          </svg>
-          Exportar a Word
-        </button>
-        <button onclick="exportarExcel()"
-          class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-800 font-bold transition duration-300 flex items-center">
-          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0-8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0-8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
-          </svg>
-          Exportar a Excel
         </button>
       </div>
 
@@ -264,28 +236,22 @@
         <a href="https://chatgpt.com/g/g-680a5c371d108191b42f4dad3d5842a3-asistente-virtual-clar-para-ccee-cunoc" 
            target="_blank"
            class="text-blue-600 hover:text-blue-800 underline font-bold text-lg">
-          Suba su documento al Creador de Programas CLAR
+          ¿Tiene dudas sobre los Programas CLAR en la USAC? Aquí las resolvemos.
         </a>
       </div>
     </div>
 
   </div> <!-- /contenedor completo -->
 
-  <!-- ============================================
-       JAVASCRIPT (funciones de generación, totales y exportaciones)
-  ============================================= -->
+  <!-- JAVASCRIPT (funciones de generación, totales y exportaciones) -->
   <script>
-    // ---------------------------------
     // Función para guardar todos los datos del formulario
-    // ---------------------------------
     function guardarDatos() {
-      // Guardar datos del formulario principal
       const formData = new FormData(document.getElementById('clarForm'));
       const formObject = {};
       formData.forEach((value, key) => formObject[key] = value);
       localStorage.setItem('formData', JSON.stringify(formObject));
 
-      // Guardar datos de la planificación
       const planData = [];
       document.querySelectorAll('#tbodyPlan tr').forEach(tr => {
         const semana = tr.querySelector('td:nth-child(1) input').value;
@@ -304,18 +270,14 @@
       });
       localStorage.setItem('planData', JSON.stringify(planData));
 
-      // Guardar configuración
       const config = {
         unidadTiempo: document.getElementById('unidadTiempo').value
       };
       localStorage.setItem('config', JSON.stringify(config));
     }
 
-    // ---------------------------------
     // Función para cargar los datos guardados
-    // ---------------------------------
     function cargarDatosGuardados() {
-      // Cargar datos del formulario principal
       const savedForm = JSON.parse(localStorage.getItem('formData'));
       if (savedForm) {
         Object.keys(savedForm).forEach(key => {
@@ -324,22 +286,17 @@
         });
       }
 
-      // Cargar configuración
       const savedConfig = JSON.parse(localStorage.getItem('config'));
       if (savedConfig) {
         document.getElementById('unidadTiempo').value = savedConfig.unidadTiempo;
       }
 
-      // Cargar planificación si existe
       const savedPlan = JSON.parse(localStorage.getItem('planData'));
       if (savedPlan && savedPlan.length > 0) {
-        // Establecer duración basada en los datos guardados
         document.getElementById('duracion').value = savedPlan.length;
         
-        // Generar las semanas (esto mostrará el contenedor)
         generarSemanas();
 
-        // Llenar los datos de cada semana
         savedPlan.forEach((semana, index) => {
           const tr = document.querySelectorAll('#tbodyPlan tr')[index];
           if (tr) {
@@ -351,14 +308,11 @@
           }
         });
 
-        // Actualizar totales
         actualizarTotales();
       }
     }
 
-    // ---------------------------------
-    // Función: Generar filas de planificación (solo modo semana)
-    // ---------------------------------
+    // Función: Generar filas de planificación
     function generarSemanas() {
       const dur = parseInt(document.getElementById('duracion').value, 10);
       if (!dur || dur < 1) {
@@ -367,13 +321,11 @@
       }
       
       const tbody = document.getElementById("tbodyPlan");
-      tbody.innerHTML = ""; // Limpiar antes de generar
+      tbody.innerHTML = "";
 
-      // Recorrer cada semana
       for (let i = 1; i <= dur; i++) {
         const tr = document.createElement("tr");
 
-        // 1) Columna: Semana X
         const tdSemana = document.createElement("td");
         tdSemana.className = "border px-2 py-1 align-top";
         tdSemana.innerHTML = `
@@ -381,7 +333,6 @@
         `;
         tr.appendChild(tdSemana);
 
-        // 2) Columna: Contenido/Temática
         const tdContenido = document.createElement("td");
         tdContenido.className = "border px-2 py-1 align-top";
         tdContenido.innerHTML = `
@@ -390,7 +341,6 @@
         `;
         tr.appendChild(tdContenido);
 
-        // 3) Columna: Distribución de Horas (solo modo semana)
         const tdHoras = document.createElement("td");
         tdHoras.className = "border px-2 py-1";
         tdHoras.innerHTML = `
@@ -412,7 +362,6 @@
         `;
         tr.appendChild(tdHoras);
 
-        // 4) Columna: Botón para eliminar fila
         const tdEliminar = document.createElement("td");
         tdEliminar.className = "border px-2 py-1 text-center align-middle";
         tdEliminar.innerHTML = `
@@ -425,11 +374,9 @@
         };
         tr.appendChild(tdEliminar);
 
-        // Añadir la fila completa al tbody
         tbody.appendChild(tr);
       }
 
-      // Registrar event listeners en los inputs de horas
       document.querySelectorAll('.horas').forEach(inputHora => {
         inputHora.addEventListener('input', function() {
           actualizarTotales();
@@ -437,32 +384,22 @@
         });
       });
 
-      // Mostrar el contenedor
       document.getElementById("planContainer").classList.remove("hidden");
-
-      // Calcular totales por primera vez
       actualizarTotales();
-
-      // Guardar los datos
       guardarDatos();
     }
 
-    // ---------------------------------
     // Función: Recalcular totales y créditos
-    // ---------------------------------
     function actualizarTotales() {
-      const unidad = document.getElementById('unidadTiempo').value; // "horas" o "minutos"
+      const unidad = document.getElementById('unidadTiempo').value;
 
-      // Variables crudas y convertidas
       let presRaw = 0, practRaw = 0, autoRaw = 0;
       let presHoras = 0, practHoras = 0, autoHoras = 0;
 
-      // Recorrer todos los inputs con clase "horas"
       document.querySelectorAll('.horas').forEach(inputHora => {
         const v = parseFloat(inputHora.value) || 0;
-        // Convertir a horas si es que la unidad actual es "minutos"
         const valorHoras = (unidad === 'minutos') ? (v / 60) : v;
-        const tipo = inputHora.dataset.tipo; // "presencial" | "practica" | "autonomo"
+        const tipo = inputHora.dataset.tipo;
 
         if (tipo === 'presencial') {
           presRaw += v;
@@ -476,15 +413,10 @@
         }
       });
 
-      // Total en horas convertidas
       const totalHorasEnHoras = presHoras + practHoras + autoHoras;
-      // Total en la unidad cruda (horas o minutos) para mostrar en tarjetas
       const totalRaw = presRaw + practRaw + autoRaw;
-
-      // Créditos CLAR (1 crédito = 24 horas)
       const creditos = (totalHorasEnHoras / 24).toFixed(2);
 
-      // Actualizar las tarjetas de totales
       const cardPres = document.getElementById('horasPresencialesFinal');
       const cardPrac = document.getElementById('horasPracticasFinal');
       const cardAuto = document.getElementById('horasAutonomasFinal');
@@ -498,7 +430,6 @@
         cardAuto.value = autoRaw.toFixed(2) + ' horas';
       }
 
-      // Actualizar el resumen grande
       const textoTotalHoras = document.getElementById('totalHoras');
       const textoCreditos = document.getElementById('creditos');
       if (unidad === 'minutos') {
@@ -512,28 +443,90 @@
       textoCreditos.innerText = `Créditos CLAR Calculados: ${creditos}`;
     }
 
-    // ---------------------------------
     // Función: Exportar a PDF (jsPDF + AutoTable)
-    // ---------------------------------
     function exportarPDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });
-
-      // Título en la parte superior
-      doc.setFontSize(18);
-      doc.setTextColor('#0B3D91');
-      doc.text('Planificación Créditos CLAR – CCEE 2025', 40, 30);
-
-      // Encabezados de la tabla con estilo
-      const encabezados = [
-        { content: 'Semana', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } },
-        { content: 'Contenido / Temática', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } },
-        { content: 'Horas Presenciales', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } },
-        { content: 'Horas Prácticas', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } },
-        { content: 'Horas Autónomas', styles: { fillColor: '#0B3D91', textColor: '#FFFFFF', halign: 'center' } }
+      
+      // Obtener información del formulario
+      const formData = new FormData(document.getElementById('clarForm'));
+      const formObject = {};
+      formData.forEach((value, key) => formObject[key] = value);
+      
+      // Configuración de estilos
+      const titleColor = '#0B3D91';
+      const subtitleColor = '#2C5282';
+      const textColor = '#2D3748';
+      const margin = 40;
+      let yPosition = 40;
+      
+      // Título principal (centrado)
+      doc.setFontSize(16);
+      doc.setTextColor(titleColor);
+      doc.setFont(undefined, 'bold');
+      doc.text('CRÉDITOS CLAR EN LA DIVISIÓN DE CCEE DEL CUNOC-USAC', doc.internal.pageSize.width / 2, yPosition, { align: 'center' });
+      yPosition += 30;
+      
+      // Saltamos la información de autoridades y vamos directamente a la información general
+      
+      // Título de sección
+      doc.setFontSize(12);
+      doc.setTextColor(subtitleColor);
+      doc.setFont(undefined, 'bold');
+      doc.text('1. Información General del Curso', margin, yPosition);
+      yPosition += 20;
+      
+      // Información general del curso en formato tabla
+      const infoGeneral = [
+        ['Docente:', formObject.docente || 'No especificado'],
+        ['Nombre del Curso:', formObject.nombre || 'No especificado'],
+        ['Año Académico:', formObject.anio || 'No especificado'],
+        ['Código del Curso:', formObject.codigo || 'No especificado'],
+        ['Carrera:', formObject.carrera || 'No especificado'],
+        ['Ciclo Académico:', formObject.ciclo_academico || 'No especificado'],
+        ['Sección:', formObject.seccion || 'No especificado'],
+        ['Semestre:', formObject.semestre || 'No especificado'],
+        ['Duración (semanas):', formObject.duracion || 'No especificado']
       ];
-
-      // Construir las filas de datos de la tabla
+      
+      // Crear tabla de información general
+      doc.autoTable({
+        startY: yPosition,
+        head: [['Campo', 'Valor']],
+        body: infoGeneral,
+        theme: 'grid',
+        headStyles: {
+          fillColor: titleColor,
+          textColor: '#FFFFFF',
+          fontStyle: 'bold'
+        },
+        bodyStyles: {
+          textColor: textColor
+        },
+        columnStyles: {
+          0: { cellWidth: 100, fontStyle: 'bold' },
+          1: { cellWidth: 'auto' }
+        },
+        margin: { left: margin, right: margin },
+        styles: { fontSize: 10, cellPadding: 4 }
+      });
+      
+      // Actualizar posición Y después de la tabla
+      yPosition = doc.lastAutoTable.finalY + 20;
+      
+      // Línea separadora
+      doc.setDrawColor(200, 200, 200);
+      doc.line(margin, yPosition, doc.internal.pageSize.width - margin, yPosition);
+      yPosition += 20;
+      
+      // Título de planificación
+      doc.setFontSize(12);
+      doc.setTextColor(subtitleColor);
+      doc.setFont(undefined, 'bold');
+      doc.text('2. Planificación Detallada por Semanas', margin, yPosition);
+      yPosition += 20;
+      
+      // Construir las filas de datos de la tabla de planificación
       const filas = [];
       document.querySelectorAll('#tbodyPlan tr').forEach(tr => {
         const celdas = tr.querySelectorAll('td');
@@ -552,35 +545,59 @@
         filas.push([
           semana,
           contenido,
-          p.toFixed(2) + ' ' + unidad,
-          pr.toFixed(2) + ' ' + unidad,
-          a.toFixed(2) + ' ' + unidad
+          p.toFixed(2) + ' ' + (unidad === 'minutos' ? 'min' : 'hrs'),
+          pr.toFixed(2) + ' ' + (unidad === 'minutos' ? 'min' : 'hrs'),
+          a.toFixed(2) + ' ' + (unidad === 'minutos' ? 'min' : 'hrs')
         ]);
       });
-
-      // Generar la tabla en el PDF
+      
+      // Generar la tabla de planificación en el PDF
       doc.autoTable({
-        head: [encabezados],
+        startY: yPosition,
+        head: [['Semana', 'Contenido / Temática', 'Horas Presenciales', 'Horas Prácticas', 'Horas Autónomas']],
         body: filas,
-        startY: 60,
-        theme: 'striped',
-        headStyles: { fontStyle: 'bold', halign: 'center' },
-        bodyStyles: { valign: 'middle' },
-        columnStyles: {
-          0: { cellWidth: 60 },
-          1: { cellWidth: 160 }
-          // El resto se ajusta automáticamente
+        theme: 'grid',
+        headStyles: {
+          fillColor: titleColor,
+          textColor: '#FFFFFF',
+          fontStyle: 'bold'
         },
-        margin: { left: 40, right: 40 }
+        bodyStyles: {
+          textColor: textColor
+        },
+        columnStyles: {
+          0: { cellWidth: 50, halign: 'center' },
+          1: { cellWidth: 180 },
+          2: { cellWidth: 50, halign: 'center' },
+          3: { cellWidth: 50, halign: 'center' },
+          4: { cellWidth: 50, halign: 'center' }
+        },
+        margin: { left: margin, right: margin },
+        styles: { fontSize: 9, cellPadding: 3, overflow: 'linebreak' },
+        pageBreak: 'auto'
       });
-
+      
+      // Actualizar posición Y después de la tabla
+      yPosition = doc.lastAutoTable.finalY + 20;
+      
       // Resumen final: totales y créditos
-      const finalY = doc.lastAutoTable.finalY + 20;
-      doc.setFontSize(12);
-      doc.setTextColor('#000000');
-      doc.text(document.getElementById('totalHoras').innerText, 40, finalY);
-      doc.text(document.getElementById('creditos').innerText, 40, finalY + 20);
-
+      doc.setFontSize(11);
+      doc.setTextColor(textColor);
+      doc.setFont(undefined, 'bold');
+      doc.text('Resumen Final:', margin, yPosition);
+      yPosition += 15;
+      
+      doc.setFont(undefined, 'normal');
+      doc.text(document.getElementById('totalHoras').innerText, margin, yPosition);
+      yPosition += 12;
+      doc.text(document.getElementById('creditos').innerText, margin, yPosition);
+      yPosition += 15;
+      
+      // Información de créditos CLAR
+      doc.setFontSize(9);
+      doc.setTextColor(100);
+      doc.text('* 1 crédito CLAR equivale a 24 horas totales de trabajo del estudiante.', margin, yPosition);
+      
       // Pie de página con número de página
       const totalPag = doc.getNumberOfPages();
       for (let i = 1; i <= totalPag; i++) {
@@ -594,180 +611,12 @@
       alert("¡Documento PDF exportado con éxito!");
     }
 
-    // ---------------------------------
-    // Función: Exportar a Word (.docx) con docx.js
-    // ---------------------------------
-    async function exportarWord() {
-      const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, AlignmentType, BorderStyle, ShadingType, WidthType } = docx;
-
-      // Crear nuevo documento
-      const doc = new Document({ sections: [] });
-
-      // Título
-      const titulo = new Paragraph({
-        alignment: AlignmentType.CENTER,
-        children: [
-          new TextRun({ text: "Planificación Créditos CLAR – CCEE 2025", bold: true, color: "0B3D91", size: 36 })
-        ]
-      });
-
-      // Preparar fila de resumen (totales, créditos y fecha)
-      const fechaHoy = new Date().toLocaleDateString("es-GT");
-      const filasResumen = [
-        ["Total de Horas", document.getElementById('totalHoras').innerText],
-        ["Créditos CLAR", document.getElementById('creditos').innerText],
-        ["Fecha de Exportación", fechaHoy]
-      ];
-
-      // Construir tabla de resumen
-      const tablaResumen = new Table({
-        rows: filasResumen.map((fila, idx) => new TableRow({
-          children: fila.map(texto => new TableCell({
-            width: { size: 50, type: WidthType.PERCENTAGE },
-            shading: idx === 0 ? { fill: "0B3D91", color: "auto", type: ShadingType.SOLID } : undefined,
-            borders: {
-              top:    { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
-              bottom: { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
-              left:   { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
-              right:  { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" }
-            },
-            children: [ new Paragraph({
-              children: [ new TextRun({ text: texto, bold: idx === 0, color: idx === 0 ? "FFFFFF" : "000000", size: 24 }) ]
-            }) ]
-          }))
-        }))
-      });
-
-      // Construir filas para la planificación
-      const encabezadosPlan = ["Semana", "Contenido / Temática", "Horas Presenciales", "Horas Prácticas", "Horas Autónomas"];
-      const filasPlan = [encabezadosPlan];
-      document.querySelectorAll('#tbodyPlan tr').forEach(tr => {
-        const cols = tr.querySelectorAll('td');
-        const semana = cols[0]?.querySelector('input')?.value || "N/A";
-        const contenido = cols[1]?.querySelector('textarea')?.value || "N/A";
-        let p = 0, pr = 0, a = 0;
-        if (cols[2]) {
-          cols[2].querySelectorAll('input.horas').forEach(input => {
-            const v = parseFloat(input.value) || 0;
-            if (input.dataset.tipo === 'presencial') p += v;
-            if (input.dataset.tipo === 'practica')   pr += v;
-            if (input.dataset.tipo === 'autonomo')   a += v;
-          });
-        }
-        const unidad = document.getElementById('unidadTiempo').value;
-        filasPlan.push([
-          semana,
-          contenido,
-          p.toFixed(2) + " " + unidad,
-          pr.toFixed(2) + " " + unidad,
-          a.toFixed(2) + " " + unidad
-        ]);
-      });
-
-      const tablaPlan = new Table({
-        rows: filasPlan.map((fila, idx) => new TableRow({
-          children: fila.map(texto => new TableCell({
-            borders: {
-              top:    { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
-              bottom: { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
-              left:   { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" },
-              right:  { style: BorderStyle.SINGLE, size: 1, color: "DDDDDD" }
-            },
-            shading: idx === 0 ? { fill: "0B3D91", color: "auto", type: ShadingType.SOLID } : undefined,
-            children: [ new Paragraph({
-              children: [ new TextRun({ text: texto, bold: idx === 0, color: idx === 0 ? "FFFFFF" : "000000", size: idx === 0 ? 24 : 20 }) ]
-            }) ]
-          }))
-        }))
-      });
-
-      // Añadir secciones
-      doc.addSection({
-        children: [
-          titulo,
-          new Paragraph({ text: "", spacing: { after: 300 } }),
-          new Paragraph({ text: "Resumen de Totales:", heading: "HEADING_2" }),
-          tablaResumen,
-          new Paragraph({ text: "", spacing: { after: 300 } })
-        ]
-      });
-      doc.addSection({
-        children: [
-          new Paragraph({ text: "Planificación Detallada por Semanas:", heading: "HEADING_2" }),
-          tablaPlan
-        ]
-      });
-
-      // Generar Blob y descarga
-      const blob = await Packer.toBlob(doc);
-      saveAs(blob, "planificacion_CLAR.docx");
-      alert("¡Documento Word exportado con éxito!");
-    }
-
-    // ---------------------------------
-    // Función: Exportar a Excel (.xlsx) con SheetJS
-    // ---------------------------------
-    function exportarExcel() {
-      const wb = XLSX.utils.book_new();
-      const fechaHoy = new Date().toLocaleDateString("es-GT");
-
-      // Hoja "Resumen"
-      const datosResumen = [
-        ["Total de Horas", document.getElementById('totalHoras').innerText],
-        ["Créditos CLAR", document.getElementById('creditos').innerText],
-        ["Fecha de Exportación", fechaHoy]
-      ];
-      const wsResumen = XLSX.utils.aoa_to_sheet(datosResumen);
-      wsResumen['!cols'] = [{wch: 30}, {wch: 50}];
-      XLSX.utils.book_append_sheet(wb, wsResumen, "Resumen");
-
-      // Hoja "Planificación"
-      const encabezados = ["Semana", "Contenido / Temática", "Horas Presenciales", "Horas Prácticas", "Horas Autónomas"];
-      const datosPlan = [encabezados];
-      document.querySelectorAll('#tbodyPlan tr').forEach(tr => {
-        const cols = tr.querySelectorAll('td');
-        const semana = cols[0]?.querySelector('input')?.value || "N/A";
-        const contenido = cols[1]?.querySelector('textarea')?.value || "N/A";
-        let p = 0, pr = 0, a = 0;
-        if (cols[2]) {
-          cols[2].querySelectorAll('input.horas').forEach(input => {
-            const v = parseFloat(input.value) || 0;
-            if (input.dataset.tipo === 'presencial') p += v;
-            if (input.dataset.tipo === 'practica')   pr += v;
-            if (input.dataset.tipo === 'autonomo')   a += v;
-          });
-        }
-        const unidad = document.getElementById('unidadTiempo').value;
-        datosPlan.push([
-          semana,
-          contenido,
-          p.toFixed(2) + " " + unidad,
-          pr.toFixed(2) + " " + unidad,
-          a.toFixed(2) + " " + unidad
-        ]);
-      });
-      const wsPlan = XLSX.utils.aoa_to_sheet(datosPlan);
-      wsPlan['!cols'] = [
-        {wch: 15},  // Semana
-        {wch: 40},  // Contenido
-        {wch: 20},  // Horas Presenciales
-        {wch: 20},  // Horas Prácticas
-        {wch: 20}   // Horas Autónomas
-      ];
-      XLSX.utils.book_append_sheet(wb, wsPlan, "Planificación");
-
-      XLSX.writeFile(wb, "planificacion_CLAR.xlsx");
-      alert("¡Documento Excel exportado con éxito!");
-    }
-
     // Event listeners para guardar datos automáticamente
     document.addEventListener('DOMContentLoaded', function() {
-      // Guardar datos cuando cambian los inputs del formulario principal
       document.querySelectorAll('#clarForm input, #clarForm select, #clarForm textarea').forEach(element => {
         element.addEventListener('change', guardarDatos);
       });
 
-      // Guardar datos cuando cambia la unidad de tiempo
       document.getElementById('unidadTiempo').addEventListener('change', function() {
         guardarDatos();
         actualizarTotales();
