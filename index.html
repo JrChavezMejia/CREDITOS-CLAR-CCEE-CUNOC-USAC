@@ -56,7 +56,7 @@
     <!-- TÍTULO PRINCIPAL Y DIRECTOR/COORDINADORES -->
     <div class="flex items-center justify-center mb-6">
       <h1 class="text-3xl font-extrabold text-center text-blue-800 uppercase">
-        GUÍA PARA PROGRAMAR CRÉDITOS CLAR EN LA DIVISIÓN DE CCEE DEL CUNOC-USAC
+        GUÍA PARA PROGRAMAR CRÉDITOS LATINOAMERICANOS DE REFERENCIA EN LA DIVISIÓN DE CCEE DEL CUNOC-USAC
       </h1>
     </div>
     <p class="text-left text-sm text-gray-700 mb-6 border-b pb-4">
@@ -215,7 +215,7 @@
         <p id="totalHoras" class="text-xl font-bold"></p>
         <p id="creditos" class="text-xl font-extrabold"></p>
         <p class="text-sm text-gray-600">
-          * Recuerde: 1 crédito CLAR equivale a 24 horas totales de trabajo del estudiante.
+          * Recuerde: 1 crédito latinoamericano de referencia equivale a 24 horas totales de trabajo del estudiante.
         </p>
       </div>
 
@@ -236,7 +236,7 @@
         <a href="https://chatgpt.com/g/g-680a5c371d108191b42f4dad3d5842a3-asistente-virtual-clar-para-ccee-cunoc" 
            target="_blank"
            class="text-blue-600 hover:text-blue-800 underline font-bold text-lg">
-          ¿Tiene dudas sobre los Programas CLAR en la USAC? Aquí las resolvemos.
+          ¿Tiene dudas sobre los CLAR en la USAC? Aquí las resolvemos.
         </a>
       </div>
     </div>
@@ -440,7 +440,7 @@
         textoTotalHoras.innerText =
           `Total de horas de trabajo del estudiante: ${totalHorasEnHoras.toFixed(2)} horas`;
       }
-      textoCreditos.innerText = `Créditos CLAR Calculados: ${creditos}`;
+      textoCreditos.innerText = `Créditos Calculados: ${creditos}`;
     }
 
     // Función: Exportar a PDF (jsPDF + AutoTable)
@@ -464,7 +464,7 @@
       doc.setFontSize(16);
       doc.setTextColor(titleColor);
       doc.setFont(undefined, 'bold');
-      doc.text('CRÉDITOS CLAR EN LA DIVISIÓN DE CCEE DEL CUNOC-USAC', doc.internal.pageSize.width / 2, yPosition, { align: 'center' });
+      doc.text('CLAR EN LA DIVISIÓN DE CCEE DEL CUNOC-USAC', doc.internal.pageSize.width / 2, yPosition, { align: 'center' });
       yPosition += 30;
       
       // Saltamos la información de autoridades y vamos directamente a la información general
@@ -593,10 +593,10 @@
       doc.text(document.getElementById('creditos').innerText, margin, yPosition);
       yPosition += 15;
       
-      // Información de créditos CLAR
+      // Información de créditos latinoamericanos de referencia
       doc.setFontSize(9);
       doc.setTextColor(100);
-      doc.text('* 1 crédito CLAR equivale a 24 horas totales de trabajo del estudiante.', margin, yPosition);
+      doc.text('* 1 CLAR equivale a 24 horas totales de trabajo del estudiante.', margin, yPosition);
       
       // Pie de página con número de página
       const totalPag = doc.getNumberOfPages();
