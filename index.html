@@ -178,8 +178,19 @@
 <script>
   const weeksDiv = document.getElementById('weeks');
   const STORAGE_KEY = 'clar_instrumento_autosave_final2025';
+  function parseLocalDate(iso){
+    if(!iso) return null;
+    const [y,m,d] = iso.split('-').map(Number);
+    return new Date(y, m-1, d);
+  }
 
-  function fmtDate(d){ return d.toISOString().slice(0,10); }
+
+  function fmtDate(d){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
   function addDays(d,days){ const r=new Date(d); r.setDate(r.getDate()+days); return r; }
   function mondayOf(date){ const d = new Date(date.getFullYear(), date.getMonth(), date.getDate()); const day = d.getDay(); const diff = (day + 6) % 7; return addDays(d, -diff); }
   function fridayOf(monday){ return addDays(monday, 4); }
@@ -239,19 +250,19 @@
     const ex2 = parseInt(document.getElementById('ex2').value || 0);
     const exf = parseInt(document.getElementById('exf').value || 0);
 
-    let s = new Date();
-    if (sV) s = new Date(sV);
-    s = mondayOf(s);
-
-    const ssIni = ssI ? new Date(ssI) : null;
-    const ssFin = ssF ? new Date(ssF) : null;
-
-    for (let i=1; i<=n; i++) {
-      const mon = addDays(s,(i-1)*7);
-      const fri = fridayOf(mon);
-      const wsISO = fmtDate(mon), weISO = fmtDate(fri);
+    
+    
+    // Anchor the calendar to Monday of the week containing the chosen start date
+    const startDate = parseLocalDate(sV) || new Date();
+    const baseMonday = mondayOf(startDate);
+    const ssIni = ssI ? parseLocalDate(ssI) : null;
+    const ssFin = ssF ? parseLocalDate(ssF) : null;
+for (let i=1; i<=n; i++) {
+      const start = addDays(baseMonday,(i-1)*7); // Monday
+      const end   = addDays(start,4);            // Friday
+      const wsISO = fmtDate(start), weISO = fmtDate(end);
       let ribbons = "";
-      if (ssIni && ssFin && overlap(mon, fri, ssIni, ssFin)) ribbons += `<span class="ribbon ss">Semana Santa</span> `;
+      if (ssIni && ssFin && overlap(start, end, ssIni, ssFin)) ribbons += `<span class="ribbon ss">Semana Santa</span> `;
       if (i===ex1) ribbons += `<span class="ribbon exam">Examen Parcial I</span> `;
       if (i===ex2) ribbons += `<span class="ribbon exam">Examen Parcial II</span> `;
       if (i===exf) ribbons += `<span class="ribbon exam">Examen Final</span>`;
