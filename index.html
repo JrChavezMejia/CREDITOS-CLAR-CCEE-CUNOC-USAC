@@ -138,6 +138,11 @@
   /* Accesibilidad visual */
   :focus{ outline:3px solid var(--focus); outline-offset:2px }
 
+  /* Logos flotantes para PDF */
+  .pdf-logos {
+    display: none;
+  }
+
   /* Impresión - MANTENER TODOS LOS ESTILOS EN PDF */
   @media print{
     *{ 
@@ -149,6 +154,30 @@
     }
     body{ background:white !important; color:black !important }
     .container{ max-width:100% !important; padding:10px !important }
+    
+    /* Logos en esquina superior derecha para PDF */
+    .pdf-logos {
+      display: block !important;
+      position: fixed;
+      top: 10mm;
+      right: 10mm;
+      z-index: 1000;
+      text-align: right;
+    }
+    
+    .pdf-logo-combined {
+      display: flex;
+      flex-direction: column;
+      gap: 5mm;
+      align-items: flex-end;
+    }
+    
+    .pdf-logo {
+      width: 25mm !important;
+      height: auto !important;
+      max-height: 20mm;
+      object-fit: contain;
+    }
     
     /* Mantener colores del encabezado */
     .master-header{ 
@@ -186,6 +215,11 @@
     .master-header input[type="number"],
     .master-header textarea:not([readonly]),
     .master-header select {
+      display: none !important;
+    }
+    
+    /* Ocultar sección de logos original en PDF */
+    .header-logos {
       display: none !important;
     }
     
@@ -258,12 +292,6 @@
     .page-header{ margin-bottom:10px !important }
     .master-header{ margin:10px 0 !important }
     
-    /* Logos en impresión */
-    .logo-preview{ 
-      background:white !important;
-      border:1px solid #94a3b8 !important;
-    }
-    
     th{ background:#f1f5f9 !important }
   }
   
@@ -282,6 +310,14 @@
 </head>
 <body>
 <div class="container">
+  <!-- Logos flotantes para PDF -->
+  <div class="pdf-logos">
+    <div class="pdf-logo-combined">
+      <img class="pdf-logo" id="pdf-logo-univ" alt="USAC CUNOC" />
+      <img class="pdf-logo" id="pdf-logo-carrera" alt="Logo Carrera" />
+    </div>
+  </div>
+
   <div class="page-header">
     <h1>INSTRUMENTO CLAR · Planificación Semanal</h1>
     <img class="logo-usac" id="usacBaseLogo" alt="USAC CUNOC" />
@@ -566,17 +602,32 @@
         docentePrints[index].textContent = item.value;
       }
     });
+
+    // Sincronizar logos para PDF
+    const logoUniv = document.getElementById('logo-univ-img');
+    const logoCarrera = document.getElementById('logo-carrera-img');
+    const pdfLogoUniv = document.getElementById('pdf-logo-univ');
+    const pdfLogoCarrera = document.getElementById('pdf-logo-carrera');
+
+    if (logoUniv && pdfLogoUniv) {
+      pdfLogoUniv.src = logoUniv.src;
+    }
+    if (logoCarrera && pdfLogoCarrera) {
+      pdfLogoCarrera.src = logoCarrera.src;
+    }
   }
 
   // ======= Inicialización de logos =======
   function initLogos(){
-    // Logo del CUNOC - URL directa y funcional
+    // Logo del CUNOC - URL actualizada
     const logoUniv = document.getElementById('logo-univ-img');
     const logoCarrera = document.getElementById('logo-carrera-img');
+    const pdfLogoUniv = document.getElementById('pdf-logo-univ');
+    const pdfLogoCarrera = document.getElementById('pdf-logo-carrera');
     
     // Logo CUNOC funcional
     if(logoUniv) {
-      logoUniv.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Logo_USAC.svg/1200px-Logo_USAC.svg.png';
+      logoUniv.src = 'https://ddo.usac.edu.gt/wp-content/uploads/2024/03/Logo-CUNOC.jpg';
       logoUniv.alt = 'USAC CUNOC';
       logoUniv.onerror = function() {
         // Fallback si la imagen no carga
@@ -594,6 +645,14 @@
       };
     }
 
+    // Sincronizar logos PDF
+    if (pdfLogoUniv && logoUniv) {
+      pdfLogoUniv.src = logoUniv.src;
+    }
+    if (pdfLogoCarrera && logoCarrera) {
+      pdfLogoCarrera.src = logoCarrera.src;
+    }
+
     // Manejar carga de logos
     document.getElementById('logo-univ-file').addEventListener('change', function(e){
       const file = e.target.files[0];
@@ -601,6 +660,7 @@
         const reader = new FileReader();
         reader.onload = function(e){
           logoUniv.src = e.target.result;
+          if (pdfLogoUniv) pdfLogoUniv.src = e.target.result;
           scheduleSave();
         };
         reader.readAsDataURL(file);
@@ -613,6 +673,7 @@
         const reader = new FileReader();
         reader.onload = function(e){
           logoCarrera.src = e.target.result;
+          if (pdfLogoCarrera) pdfLogoCarrera.src = e.target.result;
           scheduleSave();
         };
         reader.readAsDataURL(file);
@@ -621,12 +682,16 @@
 
     // Botones para quitar logos
     document.getElementById('logo-univ-clear').addEventListener('click', function(){
-      logoUniv.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0iI0VBRkFFMyIvPgo8dGV4dCB4PSI0MCIgeT0iNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxNkExN0EiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCI+TG9nbzwvdGV4dD4KPC9zdmc+';
+      const defaultLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0iI0VBRkFFMyIvPgo8dGV4dCB4PSI0MCIgeT0iNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxNkExN0EiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCI+TG9nbzwvdGV4dD4KPC9zdmc+';
+      logoUniv.src = defaultLogo;
+      if (pdfLogoUniv) pdfLogoUniv.src = defaultLogo;
       scheduleSave();
     });
 
     document.getElementById('logo-carrera-clear').addEventListener('click', function(){
-      logoCarrera.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0iI0VBRkFFMyIvPgo8dGV4dCB4PSI0MCIgeT0iNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxNkExN0EiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCI+TG9nbzwvdGV4dD4KPC9zdmc+';
+      const defaultLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0iI0VBRkFFMyIvPgo8dGV4dCB4PSI0MCIgeT0iNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxNkExN0EiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCI+TG9nbzwvdGV4dD4KPC9zdmc+';
+      logoCarrera.src = defaultLogo;
+      if (pdfLogoCarrera) pdfLogoCarrera.src = defaultLogo;
       scheduleSave();
     });
   }
