@@ -560,17 +560,38 @@
 <script>
   // ======= Estado global =======
   let weekCount = 0;
-  const COURSES_STORAGE_KEY = 'clar_usac_courses_v2';
-  const CURRENT_COURSE_KEY = 'clar_usac_current_course_v2';
+  const COURSES_STORAGE_KEY = 'clar_usac_courses_v4';
+  const CURRENT_COURSE_KEY = 'clar_usac_current_course_v4';
   const CLAR_DIVISOR = 24; // fijo
   let warnedProceso = false;
   let warnedExamen = false;
   let courses = {};
   let currentCourseId = null;
+  let docenteEventInitialized = false; // Bandera para evitar múltiples inicializaciones
 
-  // ======= Gestión de Cursos =======
+  // ======= Gestión de Cursos - VERSIÓN MEJORADA =======
   function initCourseManager() {
+    // Verificar integridad de cursos cargados
     loadCourses();
+    
+    // Limpiar cursos corruptos
+    let corruptCourses = [];
+    Object.keys(courses).forEach(id => {
+        if (!validateCourseData(courses[id])) {
+            corruptCourses.push(id);
+        }
+    });
+    
+    corruptCourses.forEach(id => {
+        console.warn('Eliminando curso corrupto:', id);
+        delete courses[id];
+    });
+    
+    if (corruptCourses.length > 0) {
+        saveCourses();
+        console.log(`Se eliminaron ${corruptCourses.length} cursos corruptos`);
+    }
+    
     updateCourseSelect();
     
     // Event listeners para gestión de cursos
@@ -586,12 +607,246 @@
     // Cargar curso actual o crear uno por defecto
     const savedCurrentId = localStorage.getItem(CURRENT_COURSE_KEY);
     if (savedCurrentId && courses[savedCurrentId]) {
-      loadCourse(savedCurrentId);
+        loadCourse(savedCurrentId);
     } else if (Object.keys(courses).length > 0) {
-      loadCourse(Object.keys(courses)[0]);
+        loadCourse(Object.keys(courses)[0]);
     } else {
-      createNewCourse();
+        createDefaultCourse();
     }
+  }
+
+  // Crear curso por defecto sin prompt
+  function createDefaultCourse() {
+    const courseId = 'course_' + Date.now();
+    const courseName = 'Nuevo Curso';
+    
+    courses[courseId] = {
+        id: courseId,
+        name: courseName,
+        data: getDefaultCourseData(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+    
+    saveCourses();
+    updateCourseSelect();
+    loadCourse(courseId);
+    
+    // Actualizar el campo del nombre del curso
+    document.getElementById('fld-curso').value = courseName;
+    syncPrintFields();
+  }
+
+  function createNewCourse() {
+    const courseName = prompt('Nombre del nuevo curso:', 'Nuevo Curso');
+    
+    if (courseName) {
+        const courseId = 'course_' + Date.now();
+        
+        courses[courseId] = {
+            id: courseId,
+            name: courseName.trim(),
+            data: getDefaultCourseData(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        
+        saveCourses();
+        updateCourseSelect();
+        loadCourse(courseId);
+        
+        // Actualizar el campo del nombre del curso
+        document.getElementById('fld-curso').value = courseName.trim();
+        syncPrintFields();
+        
+        console.log(`Curso creado: ${courseName}`);
+    }
+  }
+
+  // MEJORA: Función mejorada para guardar curso
+  function saveCurrentCourse() {
+    if (!currentCourseId) {
+        alert('No hay curso seleccionado para guardar.');
+        return;
+    }
+    
+    try {
+        // Obtener el nombre actual del campo del curso
+        const currentCourseName = document.getElementById('fld-curso').value.trim() || 'Curso sin nombre';
+        
+        // Actualizar el objeto del curso
+        courses[currentCourseId].data = collectCurrentState();
+        courses[currentCourseId].name = currentCourseName;
+        courses[currentCourseId].updatedAt = new Date().toISOString();
+        
+        saveCourses();
+        updateCourseSelect();
+        
+        // Mostrar confirmación
+        const btn = document.getElementById('btn-save-course');
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Guardado';
+        btn.style.background = '#10b981';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+        }, 2000);
+        
+        console.log(`Curso guardado: ${currentCourseName} (ID: ${currentCourseId})`);
+        
+    } catch (error) {
+        console.error('Error al guardar curso:', error);
+        alert('Error al guardar el curso: ' + error.message);
+    }
+  }
+
+  // MEJORA: Función mejorada para cambiar de curso
+  function switchCourse() {
+    const selectedId = document.getElementById('course-select').value;
+    
+    if (!selectedId) return;
+    
+    // Guardar curso actual antes de cambiar (si existe)
+    if (currentCourseId && courses[currentCourseId]) {
+        // Guardar el estado actual antes de cambiar
+        courses[currentCourseId].data = collectCurrentState();
+        courses[currentCourseId].name = document.getElementById('fld-curso').value.trim() || courses[currentCourseId].name;
+        saveCourses();
+    }
+    
+    if (courses[selectedId]) {
+        loadCourse(selectedId);
+    } else {
+        console.warn('Curso no encontrado:', selectedId);
+        if (Object.keys(courses).length > 0) {
+            loadCourse(Object.keys(courses)[0]);
+        } else {
+            createDefaultCourse();
+        }
+    }
+  }
+
+  // MEJORA: Función mejorada para cargar curso
+  function loadCourse(courseId) {
+    if (!courses[courseId]) {
+        console.error('Curso no encontrado:', courseId);
+        if (Object.keys(courses).length > 0) {
+            courseId = Object.keys(courses)[0];
+        } else {
+            createDefaultCourse();
+            return;
+        }
+    }
+    
+    currentCourseId = courseId;
+    localStorage.setItem(CURRENT_COURSE_KEY, courseId);
+    
+    const course = courses[courseId];
+    
+    // Aplicar el estado del curso
+    applyState(course.data);
+    
+    // Asegurar que el nombre del curso esté sincronizado
+    document.getElementById('fld-curso').value = course.name || 'Curso sin nombre';
+    
+    // Actualizar interfaz
+    document.getElementById('course-select').value = courseId;
+    document.title = `INSTRUMENTO CLAR – ${course.name}`;
+    
+    // Sincronizar campos para PDF
+    syncPrintFields();
+    
+    console.log(`Curso cargado: ${course.name} (ID: ${courseId})`);
+  }
+
+  // MEJORA: Validación mejorada al renombrar
+  function renameCurrentCourse() {
+    if (!currentCourseId) {
+        alert('No hay curso seleccionado para renombrar.');
+        return;
+    }
+    
+    const currentName = courses[currentCourseId].name;
+    const newName = prompt('Nuevo nombre del curso:', currentName);
+    
+    if (newName && newName.trim() !== '') {
+        const trimmedName = newName.trim();
+        courses[currentCourseId].name = trimmedName;
+        
+        // Actualizar también el campo del nombre del curso
+        document.getElementById('fld-curso').value = trimmedName;
+        
+        saveCourses();
+        updateCourseSelect();
+        syncPrintFields();
+        
+        console.log(`Curso renombrado: "${currentName}" → "${trimmedName}"`);
+    }
+  }
+
+  // MEJORA: Función mejorada para eliminar curso
+  function deleteCurrentCourse() {
+    if (!currentCourseId) {
+        alert('No hay curso seleccionado para eliminar.');
+        return;
+    }
+    
+    const courseName = courses[currentCourseId].name;
+    
+    if (confirm(`¿Está seguro de eliminar el curso "${courseName}"? Esta acción no se puede deshacer.`)) {
+        delete courses[currentCourseId];
+        saveCourses();
+        updateCourseSelect();
+        
+        // Cargar otro curso o crear uno nuevo
+        const remainingIds = Object.keys(courses);
+        if (remainingIds.length > 0) {
+            loadCourse(remainingIds[0]);
+        } else {
+            createDefaultCourse();
+        }
+        
+        console.log(`Curso eliminado: ${courseName}`);
+    }
+  }
+
+  // MEJORA: Actualizar la función updateCourseSelect para mayor robustez
+  function updateCourseSelect() {
+    const select = document.getElementById('course-select');
+    const currentValue = select.value;
+    
+    select.innerHTML = '<option value="">Seleccionar curso...</option>';
+    
+    Object.keys(courses).forEach(id => {
+        const course = courses[id];
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = course.name || `Curso ${id}`;
+        
+        // Resaltar el curso actual
+        if (id === currentCourseId) {
+            option.selected = true;
+        }
+        
+        select.appendChild(option);
+    });
+    
+    // Si no hay curso seleccionado pero hay cursos, seleccionar el primero
+    if (!currentCourseId && Object.keys(courses).length > 0) {
+        const firstCourseId = Object.keys(courses)[0];
+        select.value = firstCourseId;
+    } else if (currentCourseId) {
+        select.value = currentCourseId;
+    }
+  }
+
+  // MEJORA: Función para verificar la integridad de los datos del curso
+  function validateCourseData(courseData) {
+    if (!courseData) return false;
+    if (!courseData.name || typeof courseData.name !== 'string') return false;
+    if (!courseData.data || typeof courseData.data !== 'object') return false;
+    
+    return true;
   }
 
   function loadCourses() {
@@ -615,128 +870,12 @@
     }
   }
 
-  function updateCourseSelect() {
-    const select = document.getElementById('course-select');
-    const currentValue = select.value;
-    
-    select.innerHTML = '<option value="">Seleccionar curso...</option>';
-    
-    Object.keys(courses).forEach(id => {
-      const option = document.createElement('option');
-      option.value = id;
-      option.textContent = courses[id].name || `Curso ${id}`;
-      select.appendChild(option);
-    });
-    
-    if (currentCourseId) {
-      select.value = currentCourseId;
-    } else if (currentValue) {
-      select.value = currentValue;
-    }
-  }
-
-  function createNewCourse() {
-    const courseId = 'course_' + Date.now();
-    const courseName = prompt('Nombre del nuevo curso:', 'Nuevo Curso');
-    
-    if (courseName) {
-      courses[courseId] = {
-        id: courseId,
-        name: courseName,
-        data: getDefaultCourseData(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      
-      saveCourses();
-      updateCourseSelect();
-      loadCourse(courseId);
-    }
-  }
-
-  function saveCurrentCourse() {
-    if (!currentCourseId) return;
-    
-    courses[currentCourseId].data = collectCurrentState();
-    courses[currentCourseId].updatedAt = new Date().toISOString();
-    courses[currentCourseId].name = document.getElementById('fld-curso').value || 'Curso sin nombre';
-    
-    saveCourses();
-    updateCourseSelect();
-    
-    // Mostrar confirmación
-    const btn = document.getElementById('btn-save-course');
-    const originalText = btn.textContent;
-    btn.textContent = '✓ Guardado';
-    btn.style.background = '#10b981';
-    setTimeout(() => {
-      btn.textContent = originalText;
-      btn.style.background = '';
-    }, 2000);
-  }
-
-  function renameCurrentCourse() {
-    if (!currentCourseId) return;
-    
-    const newName = prompt('Nuevo nombre del curso:', courses[currentCourseId].name);
-    if (newName) {
-      courses[currentCourseId].name = newName;
-      saveCourses();
-      updateCourseSelect();
-    }
-  }
-
-  function deleteCurrentCourse() {
-    if (!currentCourseId) return;
-    
-    if (confirm(`¿Está seguro de eliminar el curso "${courses[currentCourseId].name}"?`)) {
-      delete courses[currentCourseId];
-      saveCourses();
-      updateCourseSelect();
-      
-      // Cargar otro curso o crear uno nuevo
-      const remainingIds = Object.keys(courses);
-      if (remainingIds.length > 0) {
-        loadCourse(remainingIds[0]);
-      } else {
-        createNewCourse();
-      }
-    }
-  }
-
-  function switchCourse() {
-    const selectedId = document.getElementById('course-select').value;
-    if (selectedId && courses[selectedId]) {
-      // Guardar curso actual antes de cambiar
-      if (currentCourseId) {
-        saveCurrentCourse();
-      }
-      loadCourse(selectedId);
-    }
-  }
-
-  function loadCourse(courseId) {
-    if (!courses[courseId]) return;
-    
-    currentCourseId = courseId;
-    localStorage.setItem(CURRENT_COURSE_KEY, courseId);
-    
-    const course = courses[courseId];
-    applyState(course.data);
-    
-    // Actualizar interfaz
-    document.getElementById('course-select').value = courseId;
-    document.title = `INSTRUMENTO CLAR – ${course.name}`;
-    
-    console.log(`Curso cargado: ${course.name}`);
-  }
-
   function exportCurrentCourse() {
     if (!currentCourseId) return;
     
     const course = courses[currentCourseId];
     const exportData = {
-      version: '2.0',
+      version: '4.0',
       exportedAt: new Date().toISOString(),
       course: course
     };
@@ -790,14 +929,45 @@
     event.target.value = ''; // Reset input
   }
 
+  // MEJORA: Datos por defecto más completos para cada curso
   function getDefaultCourseData() {
     return {
-      controls: { weeks: 16, start: '', snap: true },
-      logos: { univ: '', carrera: '' },
+      controls: { 
+        weeks: 16, 
+        start: '', 
+        snap: true 
+      },
+      logos: { 
+        univ: '', 
+        carrera: '' 
+      },
       weeks: [],
       docente: '',
-      reglamento: '',
-      biblio: ''
+      reglamento: 'Artículo 20. Normativo de Evaluación y Promoción de los estudiantes del Centro Universitarios de Occidente. "Los requisitos para someterse a exámenes finales de recuperación son: estar legalmente inscrito, tener asignado el curso, haber llenado el mínimo de puntos de zona que establece este Normativo, presentar su carné de estudiante, u otro medio de identificación a criterio del examinador, su recibo de haber pagado los derechos de exámenes, y haber cumplido con el 80% de asistencia".',
+      biblio: '',
+      // NUEVO: Datos específicos del formulario para cada curso
+      formData: {
+        universidad: 'Universidad de San Carlos de Guatemala',
+        centro: 'Centro Universitario de Occidente (CUNOC)',
+        division: 'Ciencias Económicas (CCEE)',
+        carrera: 'Administración de Empresas',
+        cod_carrera: '120004',
+        cod_curso: '482',
+        clar_credit: '0.00',
+        curso: 'Nuevo Curso',
+        requisito: 'Mercadotecnia I (Código 123)',
+        postrequisito: '—',
+        ciclo_academico: 'Primer Semestre',
+        semestre: 'Primero',
+        anio_academico: '2025',
+        titulo_docente: 'PEM en Psicología',
+        email: 'nombre.apellido@cunoc.edu.gt',
+        acuerdo_carrera: '',
+        horario: 'Lunes: 15:45 a 17:15 horas  |  Martes: 16:30 a 17:15 horas',
+        seccion: 'B',
+        desc_curso: '',
+        objetivos: ''
+      }
     };
   }
 
@@ -906,40 +1076,65 @@
     }
   }
 
-  // ======= Docentes (add / remove) =======
-  function enableDocentes(){
+  // ======= CORRECCIÓN: Gestión de docentes mejorada =======
+  function syncDocentesToHidden(){
     const list = document.getElementById('docentes-list');
     const hidden = document.getElementById('fld-docente');
-    function syncDocentesToHidden(){
-      const vals = Array.from(list.querySelectorAll('.docente-item'))
-        .map(t=>t.value.trim())
-        .filter(Boolean);
-      if(hidden){ hidden.value = vals.join('\\n'); }
-      syncPrintFields(); // Sincronizar también para PDF
-    }
+    if(!list || !hidden) return;
+    
+    const vals = Array.from(list.querySelectorAll('.docente-item'))
+      .map(t=>t.value.trim())
+      .filter(Boolean);
+    hidden.value = vals.join('\\n');
+    syncPrintFields(); // Sincronizar también para PDF
+  }
+
+  function initDocentes() {
+    // Solo inicializar una vez
+    if (docenteEventInitialized) return;
+    
+    const list = document.getElementById('docentes-list');
+    if (!list) return;
+    
+    // Event listener para sincronización de inputs
     list.addEventListener('input', syncDocentesToHidden);
+    
+    // Event listener para agregar y eliminar docentes
     document.addEventListener('click', (evt)=>{
+      // Manejar agregar docente
       const addBtn = evt.target.closest('.add-doc-inline');
       if(addBtn){
         evt.preventDefault();
+        evt.stopPropagation(); // Prevenir múltiples ejecuciones
+        
+        const list = document.getElementById('docentes-list');
         const row=document.createElement('div');
         row.className='docente-row';
         row.innerHTML='<textarea class="docente-item" placeholder="Nombre del docente"></textarea><div class="print-field docente-print" style="display:none"></div><button type="button" class="del-doc" title="Eliminar docente">×</button>';
         list.appendChild(row);
-        const ta=row.querySelector('textarea'); autoResize(ta); ta.focus();
+        const ta=row.querySelector('textarea'); 
+        autoResize(ta); 
+        ta.focus();
         syncDocentesToHidden();
         return;
       }
+      
+      // Manejar eliminar docente
       const delBtn = evt.target.closest('.del-doc');
       if(delBtn && list.contains(delBtn)){
         const row = delBtn.closest('.docente-row');
         if(row){
-          if(list.querySelectorAll('.docente-row').length > 1){ row.remove(); }
-          else{ row.querySelector('.docente-item').value=''; }
+          if(list.querySelectorAll('.docente-row').length > 1){ 
+            row.remove(); 
+          } else { 
+            row.querySelector('.docente-item').value=''; 
+          }
           syncDocentesToHidden();
         }
       }
     });
+    
+    docenteEventInitialized = true;
   }
 
   // ======= Filas de sesiones =======
@@ -1173,37 +1368,105 @@
       const base = snapEl && snapEl.checked ? toMonday(baseRaw) : baseRaw;
       const container=document.getElementById('weeks-container'); container.innerHTML=''; weekCount=0;
       for(let i=0;i<n;i++) addWeek(addDays(base, 7*i));
-      enableDocentes(); initAutosize(document);
+      initDocentes(); // Inicializar docentes solo una vez
+      initAutosize(document);
       computeAll();
     }catch(e){ console.error(e); alert('No se pudieron crear las semanas desde la barra.'); }
   }
 
-  // ======= Persistencia =======
+  // ======= MEJORA: Persistencia mejorada con datos de formulario independientes =======
   function collectCurrentState(){
     const state={
-      controls:{ weeks: parseInt(document.getElementById('weeks-count').value||'0',10), start: document.getElementById('weeks-start').value||'', snap: !!document.getElementById('weeks-snap').checked },
-      logos:{ univ: document.getElementById('logo-univ-img')?.getAttribute('src')||'', carrera: document.getElementById('logo-carrera-img')?.getAttribute('src')||'' },
+      controls:{ 
+        weeks: parseInt(document.getElementById('weeks-count').value||'0',10), 
+        start: document.getElementById('weeks-start').value||'', 
+        snap: !!document.getElementById('weeks-snap').checked 
+      },
+      logos:{ 
+        univ: document.getElementById('logo-univ-img')?.getAttribute('src')||'', 
+        carrera: document.getElementById('logo-carrera-img')?.getAttribute('src')||'' 
+      },
       weeks:[],
       docente: document.getElementById('fld-docente')?.value||'',
       reglamento: document.getElementById('eval-reglamento')?.value||'',
-      biblio: document.getElementById('biblio-egrafia')?.value||''
+      biblio: document.getElementById('biblio-egrafia')?.value||'',
+      // NUEVO: Recoger todos los datos del formulario
+      formData: {}
     };
+
+    // Recoger todos los campos del formulario
+    const formFields = document.querySelectorAll('.master-header [data-field]');
+    formFields.forEach(field => {
+      const fieldName = field.getAttribute('data-field');
+      if (fieldName) {
+        if (field.tagName === 'SELECT') {
+          state.formData[fieldName] = field.options[field.selectedIndex].text;
+        } else {
+          state.formData[fieldName] = field.value;
+        }
+      }
+    });
+
+    // Recoger datos de semanas
     document.querySelectorAll('#weeks-container .week').forEach(week=>{
-      const rows = Array.from(week.querySelectorAll('tbody tr')).map(tr=>({ desc: tr.querySelector('textarea')?.value||'', min: tr.querySelector('input.minutos')?.value||'', pts: tr.querySelector('input.puntos-netos')?.value||'' }));
+      const rows = Array.from(week.querySelectorAll('tbody tr')).map(tr=>({ 
+        desc: tr.querySelector('textarea')?.value||'', 
+        min: tr.querySelector('input.minutos')?.value||'', 
+        pts: tr.querySelector('input.puntos-netos')?.value||'' 
+      }));
       state.weeks.push({ rows });
     });
+    
     return state;
   }
 
+  // MEJORA: Aplicar estado con datos de formulario independientes
   function applyState(state){
     if(!state) return;
+    
     try{
       document.getElementById('weeks-count').value = state.controls.weeks || 16;
       document.getElementById('weeks-start').value = state.controls.start || '';
       document.getElementById('weeks-snap').checked = !!state.controls.snap;
       generateWeeksFromControls();
     }catch(e){ console.warn('No se pudo regenerar estructura:', e); }
-    if(state.docente){ const list = document.getElementById('docentes-list'); list.innerHTML=''; state.docente.split(/\\n+/).forEach(n=>{ const row=document.createElement('div'); row.className='docente-row'; row.innerHTML='<textarea class="docente-item" placeholder="Nombre del docente"></textarea><div class="print-field docente-print" style="display:none"></div><button type="button" class="del-doc" title="Eliminar docente">×</button>'; row.querySelector('textarea').value=n; list.appendChild(row); }); }
+    
+    // Aplicar datos del formulario si existen
+    if(state.formData) {
+      Object.keys(state.formData).forEach(fieldName => {
+        const field = document.querySelector(`[data-field="${fieldName}"]`);
+        if (field) {
+          if (field.tagName === 'SELECT') {
+            // Para selects, buscar la opción que coincida con el valor guardado
+            const options = field.options;
+            for (let i = 0; i < options.length; i++) {
+              if (options[i].text === state.formData[fieldName]) {
+                field.selectedIndex = i;
+                break;
+              }
+            }
+          } else {
+            field.value = state.formData[fieldName] || '';
+          }
+        }
+      });
+    }
+    
+    // Aplicar docentes
+    if(state.docente){ 
+      const list = document.getElementById('docentes-list'); 
+      list.innerHTML=''; 
+      state.docente.split(/\\n+/).forEach(n=>{ 
+        const row=document.createElement('div'); 
+        row.className='docente-row'; 
+        row.innerHTML='<textarea class="docente-item" placeholder="Nombre del docente"></textarea><div class="print-field docente-print" style="display:none"></div><button type="button" class="del-doc" title="Eliminar docente">×</button>'; 
+        row.querySelector('textarea').value=n; 
+        list.appendChild(row); 
+      }); 
+      syncDocentesToHidden();
+    }
+    
+    // Aplicar semanas
     const weeks=document.querySelectorAll('#weeks-container .week');
     weeks.forEach((weekEl, wi)=>{
       const w=state.weeks[wi]; if(!w) return;
@@ -1215,8 +1478,11 @@
         const pts=tr.querySelector('input.puntos-netos'); if(pts){ pts.value=row.pts||''; }
       });
     });
+    
+    // Aplicar reglamento y bibliografía
     document.getElementById('eval-reglamento').value = state.reglamento||'';
     document.getElementById('biblio-egrafia').value = state.biblio||'';
+    
     computeAll();
     syncPrintFields(); // Sincronizar campos para PDF
   }
@@ -1327,6 +1593,9 @@ ${document.getElementById('final-sections')?.outerHTML || ''}
     const monday = toMonday(today);
     document.getElementById('weeks-start').valueAsDate = monday;
     
+    // Inicializar gestión de docentes (solo una vez)
+    initDocentes();
+    
     // Sincronizar campos cuando cambien
     document.querySelectorAll('.master-header input, .master-header select, .master-header textarea').forEach(el => {
       el.addEventListener('input', function() {
@@ -1356,7 +1625,6 @@ ${document.getElementById('final-sections')?.outerHTML || ''}
       }
     });
 
-    enableDocentes(); 
     computeAll(); 
     initAutosize(document);
     syncPrintFields(); // Sincronizar campos inicialmente
