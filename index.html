@@ -33,6 +33,12 @@
   .btn.ghost{ background:transparent; border:1px solid var(--border-2); color:var(--fg) }
   .btn-sm{ font-size:9pt; padding:6px 10px; border-radius:8px; cursor:pointer; border:1px solid var(--border-2); background:var(--surface); color:var(--fg) }
 
+  /* Gestión de cursos */
+  .course-manager{ background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:12px; margin-bottom:12px }
+  .course-manager h3{ margin:0 0 8px 0; font-size:11pt }
+  .course-actions{ display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+  .course-select{ flex:1; min-width:200px; padding:6px 8px; border:1px solid var(--border-2); border-radius:8px; background:var(--bg) }
+
   /* Encabezado maestro */
   .master-header{ background:var(--surface-3); padding:14px; border-radius:12px; margin:12px 0; border:1px solid var(--brand); display:block }
   .header-top{ display:grid; grid-template-columns: 1fr 280px; gap:16px; align-items:start }
@@ -271,7 +277,8 @@
     /* Ocultar elementos no necesarios en PDF */
     .setup-bar, .export-actions, .logo-actions, .del-doc, .add-doc-inline, 
     .btn, .btn-sm, input[type="file"], .final-note,
-    input[type="number"], input[type="text"], select:not([readonly]) { 
+    input[type="number"], input[type="text"], select:not([readonly]),
+    .course-manager { 
       display:none !important 
     }
     
@@ -321,6 +328,23 @@
   <div class="page-header">
     <h1>INSTRUMENTO CLAR · Planificación Semanal</h1>
     <img class="logo-usac" id="usacBaseLogo" alt="USAC CUNOC" />
+  </div>
+
+  <!-- Gestión de cursos -->
+  <div class="course-manager">
+    <h3>Gestión de Cursos</h3>
+    <div class="course-actions">
+      <select id="course-select" class="course-select">
+        <option value="">Seleccionar curso...</option>
+      </select>
+      <button id="btn-new-course" class="btn success">Nuevo Curso</button>
+      <button id="btn-save-course" class="btn">Guardar Curso</button>
+      <button id="btn-rename-course" class="btn ghost">Renombrar</button>
+      <button id="btn-delete-course" class="btn warn">Eliminar</button>
+      <button id="btn-export-course" class="btn">Exportar a Archivo</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" />
+      <button id="btn-import-course" class="btn ghost">Importar desde Archivo</button>
+    </div>
   </div>
 
   <div class="setup-bar" role="region" aria-label="Configuración de semanas">
@@ -394,18 +418,10 @@
             <div class="logo-item">
               <img id="logo-univ-img" class="logo-preview" alt="Logo USAC CUNOC" />
               <div class="logo-label">USAC CUNOC</div>
-              <div class="logo-actions">
-                <input id="logo-univ-file" type="file" accept="image/*" class="btn-sm btn-outline" aria-label="Cambiar logo universidad" />
-                <button type="button" id="logo-univ-clear" class="btn-sm btn-outline">Quitar</button>
-              </div>
             </div>
             <div class="logo-item">
               <img id="logo-carrera-img" class="logo-preview" alt="Logo Carrera" />
               <div class="logo-label">Carrera</div>
-              <div class="logo-actions">
-                <input id="logo-carrera-file" type="file" accept="image/*" class="btn-sm btn-outline" aria-label="Cambiar logo carrera" />
-                <button type="button" id="logo-carrera-clear" class="btn-sm btn-outline">Quitar</button>
-              </div>
             </div>
           </div>
         </div>
@@ -544,10 +560,246 @@
 <script>
   // ======= Estado global =======
   let weekCount = 0;
-  const STORAGE_KEY = 'clar_usac_autosave_alertas_v1';
+  const COURSES_STORAGE_KEY = 'clar_usac_courses_v2';
+  const CURRENT_COURSE_KEY = 'clar_usac_current_course_v2';
   const CLAR_DIVISOR = 24; // fijo
   let warnedProceso = false;
   let warnedExamen = false;
+  let courses = {};
+  let currentCourseId = null;
+
+  // ======= Gestión de Cursos =======
+  function initCourseManager() {
+    loadCourses();
+    updateCourseSelect();
+    
+    // Event listeners para gestión de cursos
+    document.getElementById('btn-new-course').addEventListener('click', createNewCourse);
+    document.getElementById('btn-save-course').addEventListener('click', saveCurrentCourse);
+    document.getElementById('btn-rename-course').addEventListener('click', renameCurrentCourse);
+    document.getElementById('btn-delete-course').addEventListener('click', deleteCurrentCourse);
+    document.getElementById('btn-export-course').addEventListener('click', exportCurrentCourse);
+    document.getElementById('btn-import-course').addEventListener('click', () => document.getElementById('import-file').click());
+    document.getElementById('import-file').addEventListener('change', importCourseFromFile);
+    document.getElementById('course-select').addEventListener('change', switchCourse);
+    
+    // Cargar curso actual o crear uno por defecto
+    const savedCurrentId = localStorage.getItem(CURRENT_COURSE_KEY);
+    if (savedCurrentId && courses[savedCurrentId]) {
+      loadCourse(savedCurrentId);
+    } else if (Object.keys(courses).length > 0) {
+      loadCourse(Object.keys(courses)[0]);
+    } else {
+      createNewCourse();
+    }
+  }
+
+  function loadCourses() {
+    try {
+      const saved = localStorage.getItem(COURSES_STORAGE_KEY);
+      if (saved) {
+        courses = JSON.parse(saved);
+      }
+    } catch (e) {
+      console.warn('Error cargando cursos:', e);
+      courses = {};
+    }
+  }
+
+  function saveCourses() {
+    try {
+      localStorage.setItem(COURSES_STORAGE_KEY, JSON.stringify(courses));
+    } catch (e) {
+      console.warn('Error guardando cursos:', e);
+      alert('Error al guardar cursos. El almacenamiento puede estar lleno.');
+    }
+  }
+
+  function updateCourseSelect() {
+    const select = document.getElementById('course-select');
+    const currentValue = select.value;
+    
+    select.innerHTML = '<option value="">Seleccionar curso...</option>';
+    
+    Object.keys(courses).forEach(id => {
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = courses[id].name || `Curso ${id}`;
+      select.appendChild(option);
+    });
+    
+    if (currentCourseId) {
+      select.value = currentCourseId;
+    } else if (currentValue) {
+      select.value = currentValue;
+    }
+  }
+
+  function createNewCourse() {
+    const courseId = 'course_' + Date.now();
+    const courseName = prompt('Nombre del nuevo curso:', 'Nuevo Curso');
+    
+    if (courseName) {
+      courses[courseId] = {
+        id: courseId,
+        name: courseName,
+        data: getDefaultCourseData(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      saveCourses();
+      updateCourseSelect();
+      loadCourse(courseId);
+    }
+  }
+
+  function saveCurrentCourse() {
+    if (!currentCourseId) return;
+    
+    courses[currentCourseId].data = collectCurrentState();
+    courses[currentCourseId].updatedAt = new Date().toISOString();
+    courses[currentCourseId].name = document.getElementById('fld-curso').value || 'Curso sin nombre';
+    
+    saveCourses();
+    updateCourseSelect();
+    
+    // Mostrar confirmación
+    const btn = document.getElementById('btn-save-course');
+    const originalText = btn.textContent;
+    btn.textContent = '✓ Guardado';
+    btn.style.background = '#10b981';
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }
+
+  function renameCurrentCourse() {
+    if (!currentCourseId) return;
+    
+    const newName = prompt('Nuevo nombre del curso:', courses[currentCourseId].name);
+    if (newName) {
+      courses[currentCourseId].name = newName;
+      saveCourses();
+      updateCourseSelect();
+    }
+  }
+
+  function deleteCurrentCourse() {
+    if (!currentCourseId) return;
+    
+    if (confirm(`¿Está seguro de eliminar el curso "${courses[currentCourseId].name}"?`)) {
+      delete courses[currentCourseId];
+      saveCourses();
+      updateCourseSelect();
+      
+      // Cargar otro curso o crear uno nuevo
+      const remainingIds = Object.keys(courses);
+      if (remainingIds.length > 0) {
+        loadCourse(remainingIds[0]);
+      } else {
+        createNewCourse();
+      }
+    }
+  }
+
+  function switchCourse() {
+    const selectedId = document.getElementById('course-select').value;
+    if (selectedId && courses[selectedId]) {
+      // Guardar curso actual antes de cambiar
+      if (currentCourseId) {
+        saveCurrentCourse();
+      }
+      loadCourse(selectedId);
+    }
+  }
+
+  function loadCourse(courseId) {
+    if (!courses[courseId]) return;
+    
+    currentCourseId = courseId;
+    localStorage.setItem(CURRENT_COURSE_KEY, courseId);
+    
+    const course = courses[courseId];
+    applyState(course.data);
+    
+    // Actualizar interfaz
+    document.getElementById('course-select').value = courseId;
+    document.title = `INSTRUMENTO CLAR – ${course.name}`;
+    
+    console.log(`Curso cargado: ${course.name}`);
+  }
+
+  function exportCurrentCourse() {
+    if (!currentCourseId) return;
+    
+    const course = courses[currentCourseId];
+    const exportData = {
+      version: '2.0',
+      exportedAt: new Date().toISOString(),
+      course: course
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `curso_clar_${course.name.replace(/[^a-z0-9]/gi, '_')}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function importCourseFromFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const importData = JSON.parse(e.target.result);
+        
+        if (importData.version && importData.course) {
+          const course = importData.course;
+          const courseId = 'imported_' + Date.now();
+          
+          courses[courseId] = {
+            ...course,
+            id: courseId,
+            importedAt: new Date().toISOString()
+          };
+          
+          saveCourses();
+          updateCourseSelect();
+          loadCourse(courseId);
+          
+          alert(`Curso "${course.name}" importado exitosamente.`);
+        } else {
+          alert('El archivo no es un curso válido.');
+        }
+      } catch (error) {
+        alert('Error al importar el curso: ' + error.message);
+      }
+    };
+    
+    reader.readAsText(file);
+    event.target.value = ''; // Reset input
+  }
+
+  function getDefaultCourseData() {
+    return {
+      controls: { weeks: 16, start: '', snap: true },
+      logos: { univ: '', carrera: '' },
+      weeks: [],
+      docente: '',
+      reglamento: '',
+      biblio: ''
+    };
+  }
 
   // ======= Utilidades =======
   function autoResize(el){ if(!el) return; el.style.height='auto'; el.style.height = (el.scrollHeight) + 'px'; }
@@ -652,48 +904,6 @@
     if (pdfLogoCarrera && logoCarrera) {
       pdfLogoCarrera.src = logoCarrera.src;
     }
-
-    // Manejar carga de logos
-    document.getElementById('logo-univ-file').addEventListener('change', function(e){
-      const file = e.target.files[0];
-      if(file){
-        const reader = new FileReader();
-        reader.onload = function(e){
-          logoUniv.src = e.target.result;
-          if (pdfLogoUniv) pdfLogoUniv.src = e.target.result;
-          scheduleSave();
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    document.getElementById('logo-carrera-file').addEventListener('change', function(e){
-      const file = e.target.files[0];
-      if(file){
-        const reader = new FileReader();
-        reader.onload = function(e){
-          logoCarrera.src = e.target.result;
-          if (pdfLogoCarrera) pdfLogoCarrera.src = e.target.result;
-          scheduleSave();
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // Botones para quitar logos
-    document.getElementById('logo-univ-clear').addEventListener('click', function(){
-      const defaultLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0iI0VBRkFFMyIvPgo8dGV4dCB4PSI0MCIgeT0iNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxNkExN0EiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCI+TG9nbzwvdGV4dD4KPC9zdmc+';
-      logoUniv.src = defaultLogo;
-      if (pdfLogoUniv) pdfLogoUniv.src = defaultLogo;
-      scheduleSave();
-    });
-
-    document.getElementById('logo-carrera-clear').addEventListener('click', function(){
-      const defaultLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0iI0VBRkFFMyIvPgo8dGV4dCB4PSI0MCIgeT0iNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxNkExN0EiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCI+TG9nbzwvdGV4dD4KPC9zdmc+';
-      logoCarrera.src = defaultLogo;
-      if (pdfLogoCarrera) pdfLogoCarrera.src = defaultLogo;
-      scheduleSave();
-    });
   }
 
   // ======= Docentes (add / remove) =======
@@ -704,7 +914,7 @@
       const vals = Array.from(list.querySelectorAll('.docente-item'))
         .map(t=>t.value.trim())
         .filter(Boolean);
-      if(hidden){ hidden.value = vals.join('\\n'); scheduleSave(); }
+      if(hidden){ hidden.value = vals.join('\\n'); }
       syncPrintFields(); // Sincronizar también para PDF
     }
     list.addEventListener('input', syncDocentesToHidden);
@@ -793,8 +1003,8 @@
     initAutosize(weekDiv);
 
     weekDiv.querySelectorAll('.puntos-netos, .minutos').forEach(inp=>{
-      inp.addEventListener('input', ()=>{ computeAll(); scheduleSave(); });
-      inp.addEventListener('change', ()=>{ computeAll(); scheduleSave(); });
+      inp.addEventListener('input', ()=>{ computeAll(); });
+      inp.addEventListener('change', ()=>{ computeAll(); });
     });
 
     computeAll();
@@ -968,8 +1178,8 @@
     }catch(e){ console.error(e); alert('No se pudieron crear las semanas desde la barra.'); }
   }
 
-  // ======= Persistencia (localStorage) =======
-  function collectState(){
+  // ======= Persistencia =======
+  function collectCurrentState(){
     const state={
       controls:{ weeks: parseInt(document.getElementById('weeks-count').value||'0',10), start: document.getElementById('weeks-start').value||'', snap: !!document.getElementById('weeks-snap').checked },
       logos:{ univ: document.getElementById('logo-univ-img')?.getAttribute('src')||'', carrera: document.getElementById('logo-carrera-img')?.getAttribute('src')||'' },
@@ -984,6 +1194,7 @@
     });
     return state;
   }
+
   function applyState(state){
     if(!state) return;
     try{
@@ -1009,16 +1220,6 @@
     computeAll();
     syncPrintFields(); // Sincronizar campos para PDF
   }
-  let saveTimer=null; function scheduleSave(){ 
-    clearTimeout(saveTimer); 
-    saveTimer=setTimeout(()=>{ 
-      try{ 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState())); 
-        syncPrintFields(); // Sincronizar campos para PDF al guardar
-      }catch(e){ console.warn('Autosave falló:', e); } 
-    }, 300); 
-  }
-  function tryRestore(){ try{ const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return false; const data=JSON.parse(raw); applyState(data); return true; }catch(e){ console.warn('Restauración falló:', e); return false; } }
 
   // ======= Exportación =======
   function prepareForPrint() {
@@ -1115,6 +1316,9 @@ ${document.getElementById('final-sections')?.outerHTML || ''}
 
   // ======= Eventos =======
   document.addEventListener('DOMContentLoaded', function(){
+    // Inicializar gestión de cursos
+    initCourseManager();
+    
     // Inicializar logos
     initLogos();
     
@@ -1127,11 +1331,9 @@ ${document.getElementById('final-sections')?.outerHTML || ''}
     document.querySelectorAll('.master-header input, .master-header select, .master-header textarea').forEach(el => {
       el.addEventListener('input', function() {
         syncPrintFields();
-        scheduleSave();
       });
       el.addEventListener('change', function() {
         syncPrintFields();
-        scheduleSave();
       });
     });
 
@@ -1141,18 +1343,41 @@ ${document.getElementById('final-sections')?.outerHTML || ''}
     document.getElementById('btn-export-word').addEventListener('click', exportWord);
     document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
     document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
-    document.getElementById('btn-clear').addEventListener('click', ()=>{ if(confirm('Esto borrará el contenido guardado localmente. ¿Continuar?')){ localStorage.removeItem(STORAGE_KEY); location.reload(); } });
+    document.getElementById('btn-clear').addEventListener('click', ()=>{ if(confirm('Esto borrará el contenido del curso actual. ¿Continuar?')){ clearCurrentCourse(); } });
 
-    // Restaurar estado guardado o crear semana por defecto
-    const restored=tryRestore(); 
-    if(!restored) { 
-      addWeek(new Date()); 
-    } 
+    // Auto-guardado cuando se modifiquen datos
+    document.addEventListener('input', () => {
+      if (currentCourseId) {
+        // Guardar automáticamente después de un delay
+        clearTimeout(window.autoSaveTimeout);
+        window.autoSaveTimeout = setTimeout(() => {
+          saveCurrentCourse();
+        }, 2000);
+      }
+    });
+
     enableDocentes(); 
     computeAll(); 
     initAutosize(document);
     syncPrintFields(); // Sincronizar campos inicialmente
   });
+
+  function clearCurrentCourse() {
+    if (!currentCourseId) return;
+    
+    if (confirm('¿Está seguro de limpiar todo el contenido del curso actual?')) {
+      // Restablecer a valores por defecto pero mantener el curso
+      const defaultData = getDefaultCourseData();
+      courses[currentCourseId].data = defaultData;
+      applyState(defaultData);
+      saveCourses();
+    }
+  }
+
+  function buildExportHTML() {
+    // Función para generar HTML de exportación (simplificada)
+    return document.documentElement.outerHTML;
+  }
 </script>
 </body>
 </html>
