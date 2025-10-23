@@ -20,7 +20,6 @@
   .container{ max-width:1200px; margin:0 auto; padding:20px }
   h1{ font-size:12pt; font-weight:800; margin:0 }
   .page-header{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px }
-  .logo-usac{ height:52px; width:auto; margin:4px 0 2px 0 }
 
   /* Barra de configuración */
   .setup-bar{ position:sticky; top:0; z-index:5; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; box-shadow:var(--shadow); margin-bottom:12px }
@@ -41,18 +40,9 @@
 
   /* Encabezado maestro */
   .master-header{ background:var(--surface-3); padding:14px; border-radius:12px; margin:12px 0; border:1px solid var(--brand); display:block }
-  .header-top{ display:grid; grid-template-columns: 1fr 280px; gap:16px; align-items:start }
+  .header-top{ display:grid; grid-template-columns: 1fr; gap:16px; align-items:start }
   .top-left{ display:grid; grid-template-columns: 1fr; gap:12px }
-  .header-logos{ background:var(--surface-2); border:1px dashed var(--brand); border-radius:12px; padding:10px; text-align:center }
-  .header-logos h3{ font-size:11pt; margin:0 0 10px 0; text-align:center; font-weight:bold }
-  .logos-container{ display:flex; flex-direction:column; gap:10px; align-items:center }
-  .logo-combined{ display:flex; gap:15px; justify-content:center; align-items:center; flex-wrap:wrap }
-  .logo-item{ display:flex; flex-direction:column; align-items:center; gap:5px }
-  .logo-preview{ width:80px; height:80px; object-fit:contain; background:#fff; border:1px solid var(--border-2); border-radius:8px; padding:4px }
-  .logo-label{ font-size:9pt; font-weight:600; text-align:center }
-  .logo-actions{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center }
-  .logo-actions .btn-sm{ padding:4px 8px; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:8pt }
-  .btn-outline{ background:#ffffff; border:1px solid var(--brand) }
+  .header-logos{ display: none; } /* OCULTAR SECCIÓN DE LOGOS COMPLETAMENTE */
   .header-bottom{ margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:12px }
   .row{ display:flex; flex-wrap:wrap; gap:12px; align-items:center }
   .row.span-2{ grid-column:1 / -1 }
@@ -138,18 +128,125 @@
   .final-body textarea{ width:100%; border:none; outline:none; background:var(--surface-2); min-height:90px; font-size:10pt; line-height:1.4; color:var(--fg); font-weight:normal }
   .final-note{ font-size:9pt; color:var(--muted) }
 
+  /* MEJORA: Sección de firmas de docentes simplificada */
+  .docentes-section { 
+    background: var(--surface-2); 
+    border: 1px solid var(--border); 
+    border-radius: 12px; 
+    padding: 20px; 
+    margin-top: 40px; 
+    box-shadow: var(--shadow); 
+  }
+  .docentes-title { 
+    text-align: center; 
+    font-weight: bold; 
+    color: var(--fg); 
+    margin-bottom: 16px; 
+    font-size: 11pt; 
+  }
+  .docentes-grid { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    gap: 20px; 
+  }
+  .docente-firma-row { 
+    flex: 1 1 45%; 
+    max-width: 45%; 
+    background: var(--surface); 
+    border: 1px solid var(--border-2); 
+    border-radius: 10px; 
+    padding: 10px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 6px; 
+  }
+  .coordinador-firma-row { 
+    flex: 1 1 45%; 
+    max-width: 45%; 
+    background: var(--surface); 
+    border: 1px solid var(--border-2); 
+    border-radius: 10px; 
+    padding: 10px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 6px; 
+    margin-left: auto; 
+  }
+  .docente-firma-item { 
+    width: 100%; 
+    padding: 6px 8px; 
+    border: 1px solid var(--border-2); 
+    border-radius: 8px; 
+    text-align: center; 
+    background: var(--bg); 
+    color: var(--fg); 
+    font-weight: bold;
+  }
+  .vobo-text {
+    font-style: italic;
+    font-size: 9pt;
+    margin-top: 4px;
+  }
+  .firma-docente { 
+    width: 100%; 
+  }
+  .firma-preview { 
+    max-height: 60px; 
+    border: 1px solid var(--border); 
+    border-radius: 6px; 
+    padding: 2px; 
+    background: var(--surface); 
+  }
+
+  /* NOTA FLOTANTE DE DERECHOS RESERVADOS - Solo en formulario */
+  .derechos-reservados {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 9pt;
+    color: var(--muted);
+    z-index: 1000;
+    box-shadow: var(--shadow);
+  }
+
+  /* ENCABEZADO INFORMATIVO - Solo en formulario */
+  .info-coordinadores {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin: 12px 0;
+    font-size: 9pt;
+  }
+  .info-coordinadores h3 {
+    margin: 0 0 8px 0;
+    font-size: 10pt;
+    text-align: center;
+  }
+  .info-coordinadores ul {
+    margin: 0;
+    padding-left: 16px;
+  }
+
+  /* Logotipos para PDF - ELIMINADOS */
+  .pdf-logos {
+    display: none;
+  }
+
   /* Exportación */
   .export-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:14px }
 
   /* Accesibilidad visual */
   :focus{ outline:3px solid var(--focus); outline-offset:2px }
 
-  /* Logos flotantes para PDF */
-  .pdf-logos {
-    display: none;
-  }
-
-  /* Impresión - MANTENER TODOS LOS ESTILOS EN PDF */
+  /* Impresión - CORRECCIÓN COMPLETA DE FIRMAS */
   @media print{
     *{ 
       font-family: Arial, sans-serif !important; 
@@ -161,28 +258,20 @@
     body{ background:white !important; color:black !important }
     .container{ max-width:100% !important; padding:10px !important }
     
-    /* Logos en esquina superior derecha para PDF */
+    /* Tamaño de página carta */
+    @page {
+      size: 21.59cm 27.94cm;
+      margin: 12mm;
+    }
+    
+    /* MEJORA: Logotipos SOLO en la primera página - ELIMINADOS */
     .pdf-logos {
-      display: block !important;
-      position: fixed;
-      top: 10mm;
-      right: 10mm;
-      z-index: 1000;
-      text-align: right;
+      display: none !important;
     }
     
-    .pdf-logo-combined {
-      display: flex;
-      flex-direction: column;
-      gap: 5mm;
-      align-items: flex-end;
-    }
-    
-    .pdf-logo {
-      width: 25mm !important;
-      height: auto !important;
-      max-height: 20mm;
-      object-fit: contain;
+    /* Ocultar encabezado "INSTRUMENTO CLAR · Planificación Semanal" */
+    .page-header {
+      display: none !important;
     }
     
     /* Mantener colores del encabezado */
@@ -216,16 +305,23 @@
       font-weight: normal !important;
     }
     
+    /* CORRECCIÓN: Mostrar la carrera en el PDF */
+    #fld-carrera {
+      display: none !important;
+    }
+    #print-carrera {
+      display: block !important;
+      background:#eafff3 !important;
+      border:1px solid #16a34a !important;
+      color: #000 !important;
+      font-weight: normal !important;
+    }
+    
     /* Ocultar campos editables en PDF */
     .master-header input[type="text"],
     .master-header input[type="number"],
     .master-header textarea:not([readonly]),
-    .master-header select {
-      display: none !important;
-    }
-    
-    /* Ocultar sección de logos original en PDF */
-    .header-logos {
+    .master-header select:not(#fld-carrera) {
       display: none !important;
     }
     
@@ -274,20 +370,118 @@
     .badge.warn{ background:#fee2e2 !important; border-color:#ef4444 !important }
     .exam-badge{ background:#fde68a !important; border:1px solid #f59e0b !important }
     
-    /* Ocultar elementos no necesarios en PDF */
-    .setup-bar, .export-actions, .logo-actions, .del-doc, .add-doc-inline, 
-    .btn, .btn-sm, input[type="file"], .final-note,
-    input[type="number"], input[type="text"], select:not([readonly]),
-    .course-manager { 
-      display:none !important 
+    /* CORRECCIÓN COMPLETA: Sección de firmas de docentes en PDF */
+    .docentes-section {
+      display: block !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      margin-top: 40px !important;
+      padding: 0 !important;
+      page-break-inside: avoid !important;
     }
     
+    .docentes-title {
+      text-align: center !important;
+      font-weight: bold !important;
+      margin-bottom: 25px !important;
+      color: #000 !important;
+      font-size: 11pt !important;
+      border-bottom: none !important; /* ELIMINAR LÍNEA HORIZONTAL */
+      padding-bottom: 0 !important; /* ELIMINAR ESPACIO EXTRA */
+    }
+    
+    .docentes-grid {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: space-between !important;
+      gap: 30px !important;
+      margin-bottom: 40px !important;
+    }
+    
+    .docente-firma-row, .coordinador-firma-row {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      background: transparent !important;
+      border: none !important;
+      margin-bottom: 0 !important;
+      page-break-inside: avoid !important;
+      padding: 0 !important;
+      flex: 1 1 45% !important;
+      min-width: 45% !important;
+    }
+    
+    .coordinador-firma-row {
+      margin-left: auto !important;
+    }
+    
+    .docente-firma-item, .coordinador-firma-item {
+      background: transparent !important;
+      border: none !important;
+      font-weight: bold !important;
+      text-align: center !important;
+      padding: 0 !important;
+      margin-top: 10px !important;
+      color: #000 !important;
+      font-size: 10pt !important;
+      font-family: Arial, sans-serif !important;
+      border-top: 1px solid #000 !important;
+      padding-top: 8px !important;
+      width: 100% !important;
+      display: block !important;
+    }
+    
+    .vobo-text {
+      font-style: italic !important;
+      font-size: 9pt !important;
+      margin-top: 4px !important;
+      color: #000 !important;
+    }
+    
+    .firma-preview {
+      display: block !important;
+      max-height: 50px !important;
+      border: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+      margin-bottom: 5px !important;
+    }
+
+    /* CORRECCIÓN: Ocultar textarea de bibliografía editable y mostrar solo el campo de impresión */
+    #biblio-egrafia {
+      display: none !important;
+    }
+    #print-biblio {
+      display: block !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 6px 8px !important;
+      color: #000 !important;
+      font-weight: normal !important;
+      white-space: pre-wrap !important;
+      word-break: break-word !important;
+      line-height: 1.4 !important;
+    }
+
     /* Mostrar solo lectura para textareas editables */
     textarea:not([readonly]) {
       background: transparent !important;
       border: none !important;
       resize: none !important;
       color: #000 !important;
+    }
+
+    /* MEJORA: Ocultar elementos innecesarios en PDF */
+    .setup-bar, .export-actions, .logo-actions, .del-doc, .add-doc-inline, 
+    .btn, .btn-sm, input[type="file"], .final-note,
+    input[type="number"], input[type="text"], select:not([readonly]),
+    .course-manager, .add-docente,
+    .docentes-section .add-docente,
+    .firma-docente,
+    .derechos-reservados,
+    .info-coordinadores {
+      display: none !important;
     }
     
     /* Ajustes de layout para impresión */
@@ -296,38 +490,43 @@
       page-break-inside:avoid;
       margin-bottom:15px !important;
     }
-    .page-header{ margin-bottom:10px !important }
     .master-header{ margin:10px 0 !important }
     
     th{ background:#f1f5f9 !important }
-  }
-  
-  @page{ 
-    size:A4; 
-    margin:12mm;
   }
   
   /* Docentes */
   .docentes-list{ display:flex; flex-direction:column; gap:6px; width:100% }
   .docente-row{ display:flex; gap:6px; width:100% }
   .docente-item{ flex:1; padding:6px 8px; border:1px solid var(--brand); border-radius:8px; background:var(--surface-2); font-size:10pt; font-weight:normal }
-  .del-doc{ border:1px solid var(--border-2); border-radius:8px; background:#fee2e2; color:#7f1d1d; font-weight:700; padding:0 10px }
+  .del-doc{ border:1px solid var(--border-2); border-radius:8px; background:#fee2e2; color:#7f1d1d; font-weight:700; padding:0 10px; cursor: pointer }
   .del-doc:hover{ filter:brightness(.97) }
+  .add-doc-inline{ background: var(--brand-2); color: white; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer; margin-top: 8px; }
 </style>
 </head>
 <body>
 <div class="container">
-  <!-- Logos flotantes para PDF -->
-  <div class="pdf-logos">
-    <div class="pdf-logo-combined">
-      <img class="pdf-logo" id="pdf-logo-univ" alt="USAC CUNOC" />
-      <img class="pdf-logo" id="pdf-logo-carrera" alt="Logo Carrera" />
-    </div>
+  <!-- NOTA DE DERECHOS RESERVADOS - Solo en formulario -->
+  <div class="derechos-reservados">
+    Derechos Reservados 2025 – Dr. José Rodolfo Chávez Mejía - División CCEE – CUNOC – USAC
   </div>
 
   <div class="page-header">
     <h1>INSTRUMENTO CLAR · Planificación Semanal</h1>
-    <img class="logo-usac" id="usacBaseLogo" alt="USAC CUNOC" />
+  </div>
+
+  <!-- ENCABEZADO INFORMATIVO - Solo en formulario -->
+  <div class="info-coordinadores">
+    <h3>GUÍA PARA PROGRAMAR CRÉDITOS CLAR EN LA DIVISIÓN DE CCEE DEL CUNOC-USAC</h3>
+    <p><strong>Director:</strong> Dr. Edgar Vidal Camposeco Pérez.</p>
+    <p><strong>Coordinadores:</strong></p>
+    <ul>
+      <li>M. Sc. Julio César López De León, Contaduría Pública y Auditoría.</li>
+      <li>Dr. Walter Alfredo Santizo López, Administración de Empresas.</li>
+      <li>M. Sc. Julio Rodolfo Lima Ochoa, Economía.</li>
+      <li>M. Sc. Mauro Sierra Hengstemberg, Área Común.</li>
+    </ul>
+    <p><strong>Diseño:</strong> M. Sc. Luz Maria Lima Soto. Dr. José Rodolfo Chávez Mejía.</p>
   </div>
 
   <!-- Gestión de cursos -->
@@ -387,6 +586,8 @@
             <option>Economía</option>
             <option>Área Común</option>
           </select>
+          <!-- CORRECCIÓN: Campo de impresión para la carrera -->
+          <div class="print-field" id="print-carrera" style="display:none">Administración de Empresas</div>
           <span id="help-carrera" class="final-note">Seleccione la carrera</span>
         </div>
         
@@ -411,21 +612,7 @@
         </div>
       </div>
 
-      <aside class="header-logos" aria-label="Logotipos">
-        <h3>Logotipos</h3>
-        <div class="logos-container">
-          <div class="logo-combined">
-            <div class="logo-item">
-              <img id="logo-univ-img" class="logo-preview" alt="Logo USAC CUNOC" />
-              <div class="logo-label">USAC CUNOC</div>
-            </div>
-            <div class="logo-item">
-              <img id="logo-carrera-img" class="logo-preview" alt="Logo Carrera" />
-              <div class="logo-label">Carrera</div>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <!-- ELIMINADO: Sección completa de logotipos -->
     </div>
 
     <div class="header-bottom">
@@ -549,8 +736,30 @@
     </div>
   </div>
 
+  <!-- MEJORA: Sección ÚNICA de firmas de docentes CON COORDINADOR INTEGRADO -->
+  <div class="docentes-section">
+    <div class="docentes-title">Firmas de Docentes</div>
+    <div id="docentes-firmas-list" class="docentes-grid">
+      <!-- Docente 1 -->
+      <div class="docente-firma-row">
+        <input type="file" accept="image/*" class="firma-docente" title="Subir firma del docente" />
+        <img class="firma-preview" alt="Firma Docente" style="display:none;" />
+        <div class="docente-firma-item">Nombre del Docente</div>
+      </div>
+      
+      <!-- Coordinador integrado en la misma sección -->
+      <div class="coordinador-firma-row">
+        <input type="file" accept="image/*" class="firma-docente" title="Subir firma del coordinador" />
+        <img class="firma-preview" alt="Firma Coordinador" style="display:none;" />
+        <div class="coordinador-firma-item" id="nombre-coordinador">M. Sc. Julio César López De León</div>
+        <div class="vobo-text">Vo. Bo. Coordinador de la carrera</div>
+      </div>
+    </div>
+    <!-- ELIMINADO: Botón "Agregar Docente" -->
+  </div>
+
   <div class="export-actions">
-    <button id="btn-export-excel" class="btn">Exportar a Excel</button>
+    <!-- ELIMINADO: Botón Excel -->
     <button id="btn-export-word" class="btn" style="background:#6366f1">Exportar a Word</button>
     <button id="btn-export-pdf" class="btn warn">Exportar a PDF</button>
     <button id="btn-export-csv" class="btn ghost">Exportar a CSV</button>
@@ -558,962 +767,1103 @@
 </div>
 
 <script>
-  // ======= Estado global =======
-  let weekCount = 0;
-  const COURSES_STORAGE_KEY = 'clar_usac_courses_v4';
-  const CURRENT_COURSE_KEY = 'clar_usac_current_course_v4';
-  const CLAR_DIVISOR = 24; // fijo
-  let warnedProceso = false;
-  let warnedExamen = false;
-  let courses = {};
-  let currentCourseId = null;
-  let docenteEventInitialized = false; // Bandera para evitar múltiples inicializaciones
+// ======= Estado global =======
+let weekCount = 0;
+const COURSES_STORAGE_KEY = 'clar_usac_courses_v5'; // Incrementado versión para incluir firmas
+const CURRENT_COURSE_KEY = 'clar_usac_current_course_v5';
+const CLAR_DIVISOR = 24; // fijo
+let warnedProceso = false;
+let warnedExamen = false;
+let courses = {};
+let currentCourseId = null;
+let docenteEventInitialized = false; // Bandera para evitar múltiples inicializaciones
 
-  // ======= Gestión de Cursos - VERSIÓN MEJORADA =======
-  function initCourseManager() {
-    // Verificar integridad de cursos cargados
-    loadCourses();
-    
-    // Limpiar cursos corruptos
-    let corruptCourses = [];
-    Object.keys(courses).forEach(id => {
-        if (!validateCourseData(courses[id])) {
-            corruptCourses.push(id);
-        }
-    });
-    
-    corruptCourses.forEach(id => {
-        console.warn('Eliminando curso corrupto:', id);
-        delete courses[id];
-    });
-    
-    if (corruptCourses.length > 0) {
-        saveCourses();
-        console.log(`Se eliminaron ${corruptCourses.length} cursos corruptos`);
-    }
-    
-    updateCourseSelect();
-    
-    // Event listeners para gestión de cursos
-    document.getElementById('btn-new-course').addEventListener('click', createNewCourse);
-    document.getElementById('btn-save-course').addEventListener('click', saveCurrentCourse);
-    document.getElementById('btn-rename-course').addEventListener('click', renameCurrentCourse);
-    document.getElementById('btn-delete-course').addEventListener('click', deleteCurrentCourse);
-    document.getElementById('btn-export-course').addEventListener('click', exportCurrentCourse);
-    document.getElementById('btn-import-course').addEventListener('click', () => document.getElementById('import-file').click());
-    document.getElementById('import-file').addEventListener('change', importCourseFromFile);
-    document.getElementById('course-select').addEventListener('change', switchCourse);
-    
-    // Cargar curso actual o crear uno por defecto
-    const savedCurrentId = localStorage.getItem(CURRENT_COURSE_KEY);
-    if (savedCurrentId && courses[savedCurrentId]) {
-        loadCourse(savedCurrentId);
-    } else if (Object.keys(courses).length > 0) {
-        loadCourse(Object.keys(courses)[0]);
-    } else {
-        createDefaultCourse();
-    }
+// ======= Gestión de Cursos - VERSIÓN MEJORADA =======
+function initCourseManager() {
+  // Verificar integridad de cursos cargados
+  loadCourses();
+  
+  // Limpiar cursos corruptos
+  let corruptCourses = [];
+  Object.keys(courses).forEach(id => {
+      if (!validateCourseData(courses[id])) {
+          corruptCourses.push(id);
+      }
+  });
+  
+  corruptCourses.forEach(id => {
+      console.warn('Eliminando curso corrupto:', id);
+      delete courses[id];
+  });
+  
+  if (corruptCourses.length > 0) {
+      saveCourses();
+      console.log(`Se eliminaron ${corruptCourses.length} cursos corruptos`);
   }
-
-  // Crear curso por defecto sin prompt
-  function createDefaultCourse() {
-    const courseId = 'course_' + Date.now();
-    const courseName = 'Nuevo Curso';
-    
-    courses[courseId] = {
-        id: courseId,
-        name: courseName,
-        data: getDefaultCourseData(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-    };
-    
-    saveCourses();
-    updateCourseSelect();
-    loadCourse(courseId);
-    
-    // Actualizar el campo del nombre del curso
-    document.getElementById('fld-curso').value = courseName;
-    syncPrintFields();
+  
+  updateCourseSelect();
+  
+  // Event listeners para gestión de cursos
+  document.getElementById('btn-new-course').addEventListener('click', createNewCourse);
+  document.getElementById('btn-save-course').addEventListener('click', saveCurrentCourse);
+  document.getElementById('btn-rename-course').addEventListener('click', renameCurrentCourse);
+  document.getElementById('btn-delete-course').addEventListener('click', deleteCurrentCourse);
+  document.getElementById('btn-export-course').addEventListener('click', exportCurrentCourse);
+  document.getElementById('btn-import-course').addEventListener('click', () => document.getElementById('import-file').click());
+  document.getElementById('import-file').addEventListener('change', importCourseFromFile);
+  document.getElementById('course-select').addEventListener('change', switchCourse);
+  
+  // Cargar curso actual o crear uno por defecto
+  const savedCurrentId = localStorage.getItem(CURRENT_COURSE_KEY);
+  if (savedCurrentId && courses[savedCurrentId]) {
+      loadCourse(savedCurrentId);
+  } else if (Object.keys(courses).length > 0) {
+      loadCourse(Object.keys(courses)[0]);
+  } else {
+      createDefaultCourse();
   }
+}
 
-  function createNewCourse() {
-    const courseName = prompt('Nombre del nuevo curso:', 'Nuevo Curso');
-    
-    if (courseName) {
-        const courseId = 'course_' + Date.now();
+// Crear curso por defecto sin prompt
+function createDefaultCourse() {
+  const courseId = 'course_' + Date.now();
+  const courseName = 'Nuevo Curso';
+  
+  courses[courseId] = {
+      id: courseId,
+      name: courseName,
+      data: getDefaultCourseData(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+  };
+  
+  saveCourses();
+  updateCourseSelect();
+  loadCourse(courseId);
+  
+  // Actualizar el campo del nombre del curso
+  document.getElementById('fld-curso').value = courseName;
+  syncPrintFields();
+}
+
+function createNewCourse() {
+  const courseName = prompt('Nombre del nuevo curso:', 'Nuevo Curso');
+  
+  if (courseName) {
+      const courseId = 'course_' + Date.now();
+      
+      courses[courseId] = {
+          id: courseId,
+          name: courseName.trim(),
+          data: getDefaultCourseData(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+      };
+      
+      saveCourses();
+      updateCourseSelect();
+      loadCourse(courseId);
+      
+      // Actualizar el campo del nombre del curso
+      document.getElementById('fld-curso').value = courseName.trim();
+      syncPrintFields();
+      
+      console.log(`Curso creado: ${courseName}`);
+  }
+}
+
+// MEJORA: Función mejorada para guardar curso
+function saveCurrentCourse() {
+  if (!currentCourseId) {
+      alert('No hay curso seleccionado para guardar.');
+      return;
+  }
+  
+  try {
+      // Obtener el nombre actual del campo del curso
+      const currentCourseName = document.getElementById('fld-curso').value.trim() || 'Curso sin nombre';
+      
+      // Actualizar el objeto del curso
+      courses[currentCourseId].data = collectCurrentState();
+      courses[currentCourseId].name = currentCourseName;
+      courses[currentCourseId].updatedAt = new Date().toISOString();
+      
+      saveCourses();
+      updateCourseSelect();
+      
+      // Mostrar confirmación
+      const btn = document.getElementById('btn-save-course');
+      const originalText = btn.textContent;
+      btn.textContent = '✓ Guardado';
+      btn.style.background = '#10b981';
+      setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+      }, 2000);
+      
+      console.log(`Curso guardado: ${currentCourseName} (ID: ${currentCourseId})`);
+      
+  } catch (error) {
+      console.error('Error al guardar curso:', error);
+      alert('Error al guardar el curso: ' + error.message);
+  }
+}
+
+// MEJORA: Función mejorada para cambiar de curso
+function switchCourse() {
+  const selectedId = document.getElementById('course-select').value;
+  
+  if (!selectedId) return;
+  
+  // Guardar curso actual antes de cambiar (si existe)
+  if (currentCourseId && courses[currentCourseId]) {
+      // Guardar el estado actual antes de cambiar
+      courses[currentCourseId].data = collectCurrentState();
+      courses[currentCourseId].name = document.getElementById('fld-curso').value.trim() || courses[currentCourseId].name;
+      saveCourses();
+  }
+  
+  if (courses[selectedId]) {
+      loadCourse(selectedId);
+  } else {
+      console.warn('Curso no encontrado:', selectedId);
+      if (Object.keys(courses).length > 0) {
+          loadCourse(Object.keys(courses)[0]);
+      } else {
+          createDefaultCourse();
+      }
+  }
+}
+
+// MEJORA: Función mejorada para cargar curso
+function loadCourse(courseId) {
+  if (!courses[courseId]) {
+      console.error('Curso no encontrado:', courseId);
+      if (Object.keys(courses).length > 0) {
+          courseId = Object.keys(courses)[0];
+      } else {
+          createDefaultCourse();
+          return;
+      }
+  }
+  
+  currentCourseId = courseId;
+  localStorage.setItem(CURRENT_COURSE_KEY, courseId);
+  
+  const course = courses[courseId];
+  
+  // Aplicar el estado del curso
+  applyState(course.data);
+  
+  // Asegurar que el nombre del curso esté sincronizado
+  document.getElementById('fld-curso').value = course.name || 'Curso sin nombre';
+  
+  // Actualizar interfaz
+  document.getElementById('course-select').value = courseId;
+  document.title = `INSTRUMENTO CLAR – ${course.name}`;
+  
+  // Sincronizar campos para PDF
+  syncPrintFields();
+  
+  console.log(`Curso cargado: ${course.name} (ID: ${courseId})`);
+}
+
+// MEJORA: Validación mejorada al renombrar
+function renameCurrentCourse() {
+  if (!currentCourseId) {
+      alert('No hay curso seleccionado para renombrar.');
+      return;
+  }
+  
+  const currentName = courses[currentCourseId].name;
+  const newName = prompt('Nuevo nombre del curso:', currentName);
+  
+  if (newName && newName.trim() !== '') {
+      const trimmedName = newName.trim();
+      courses[currentCourseId].name = trimmedName;
+      
+      // Actualizar también el campo del nombre del curso
+      document.getElementById('fld-curso').value = trimmedName;
+      
+      saveCourses();
+      updateCourseSelect();
+      syncPrintFields();
+      
+      console.log(`Curso renombrado: "${currentName}" → "${trimmedName}"`);
+  }
+}
+
+// MEJORA: Función mejorada para eliminar curso
+function deleteCurrentCourse() {
+  if (!currentCourseId) {
+      alert('No hay curso seleccionado para eliminar.');
+      return;
+  }
+  
+  const courseName = courses[currentCourseId].name;
+  
+  if (confirm(`¿Está seguro de eliminar el curso "${courseName}"? Esta acción no se puede deshacer.`)) {
+      delete courses[currentCourseId];
+      saveCourses();
+      updateCourseSelect();
+      
+      // Cargar otro curso o crear uno nuevo
+      const remainingIds = Object.keys(courses);
+      if (remainingIds.length > 0) {
+          loadCourse(remainingIds[0]);
+      } else {
+          createDefaultCourse();
+      }
+      
+      console.log(`Curso eliminado: ${courseName}`);
+  }
+}
+
+// MEJORA: Actualizar la función updateCourseSelect para mayor robustez
+function updateCourseSelect() {
+  const select = document.getElementById('course-select');
+  const currentValue = select.value;
+  
+  select.innerHTML = '<option value="">Seleccionar curso...</option>';
+  
+  Object.keys(courses).forEach(id => {
+      const course = courses[id];
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = course.name || `Curso ${id}`;
+      
+      // Resaltar el curso actual
+      if (id === currentCourseId) {
+          option.selected = true;
+      }
+      
+      select.appendChild(option);
+  });
+  
+  // Si no hay curso seleccionado pero hay cursos, seleccionar el primero
+  if (!currentCourseId && Object.keys(courses).length > 0) {
+      const firstCourseId = Object.keys(courses)[0];
+      select.value = firstCourseId;
+  } else if (currentCourseId) {
+      select.value = currentCourseId;
+  }
+}
+
+// MEJORA: Función para verificar la integridad de los datos del curso
+function validateCourseData(courseData) {
+  if (!courseData) return false;
+  if (!courseData.name || typeof courseData.name !== 'string') return false;
+  if (!courseData.data || typeof courseData.data !== 'object') return false;
+  
+  return true;
+}
+
+function loadCourses() {
+  try {
+    const saved = localStorage.getItem(COURSES_STORAGE_KEY);
+    if (saved) {
+      courses = JSON.parse(saved);
+    }
+  } catch (e) {
+    console.warn('Error cargando cursos:', e);
+    courses = {};
+  }
+}
+
+function saveCourses() {
+  try {
+    localStorage.setItem(COURSES_STORAGE_KEY, JSON.stringify(courses));
+  } catch (e) {
+    console.warn('Error guardando cursos:', e);
+    alert('Error al guardar cursos. El almacenamiento puede estar lleno.');
+  }
+}
+
+function exportCurrentCourse() {
+  if (!currentCourseId) return;
+  
+  const course = courses[currentCourseId];
+  const exportData = {
+    version: '5.0', // Incrementado para incluir firmas
+    exportedAt: new Date().toISOString(),
+    course: course
+  };
+  
+  const dataStr = JSON.stringify(exportData, null, 2);
+  const dataBlob = new Blob([dataStr], {type: 'application/json'});
+  
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `curso_clar_${course.name.replace(/[^a-z0-9]/gi, '_')}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function importCourseFromFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importData = JSON.parse(e.target.result);
+      
+      if (importData.version && importData.course) {
+        const course = importData.course;
+        const courseId = 'imported_' + Date.now();
         
         courses[courseId] = {
-            id: courseId,
-            name: courseName.trim(),
-            data: getDefaultCourseData(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+          ...course,
+          id: courseId,
+          importedAt: new Date().toISOString()
         };
         
         saveCourses();
         updateCourseSelect();
         loadCourse(courseId);
         
-        // Actualizar el campo del nombre del curso
-        document.getElementById('fld-curso').value = courseName.trim();
-        syncPrintFields();
-        
-        console.log(`Curso creado: ${courseName}`);
-    }
-  }
-
-  // MEJORA: Función mejorada para guardar curso
-  function saveCurrentCourse() {
-    if (!currentCourseId) {
-        alert('No hay curso seleccionado para guardar.');
-        return;
-    }
-    
-    try {
-        // Obtener el nombre actual del campo del curso
-        const currentCourseName = document.getElementById('fld-curso').value.trim() || 'Curso sin nombre';
-        
-        // Actualizar el objeto del curso
-        courses[currentCourseId].data = collectCurrentState();
-        courses[currentCourseId].name = currentCourseName;
-        courses[currentCourseId].updatedAt = new Date().toISOString();
-        
-        saveCourses();
-        updateCourseSelect();
-        
-        // Mostrar confirmación
-        const btn = document.getElementById('btn-save-course');
-        const originalText = btn.textContent;
-        btn.textContent = '✓ Guardado';
-        btn.style.background = '#10b981';
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.background = '';
-        }, 2000);
-        
-        console.log(`Curso guardado: ${currentCourseName} (ID: ${currentCourseId})`);
-        
+        alert(`Curso "${course.name}" importado exitosamente.`);
+      } else {
+        alert('El archivo no es un curso válido.');
+      }
     } catch (error) {
-        console.error('Error al guardar curso:', error);
-        alert('Error al guardar el curso: ' + error.message);
+      alert('Error al importar el curso: ' + error.message);
     }
-  }
+  };
+  
+  reader.readAsText(file);
+  event.target.value = ''; // Reset input
+}
 
-  // MEJORA: Función mejorada para cambiar de curso
-  function switchCourse() {
-    const selectedId = document.getElementById('course-select').value;
-    
-    if (!selectedId) return;
-    
-    // Guardar curso actual antes de cambiar (si existe)
-    if (currentCourseId && courses[currentCourseId]) {
-        // Guardar el estado actual antes de cambiar
-        courses[currentCourseId].data = collectCurrentState();
-        courses[currentCourseId].name = document.getElementById('fld-curso').value.trim() || courses[currentCourseId].name;
-        saveCourses();
+// MEJORA: Datos por defecto más completos para cada curso
+function getDefaultCourseData() {
+  return {
+    controls: { 
+      weeks: 16, 
+      start: '', 
+      snap: true 
+    },
+    logos: { 
+      univ: '', 
+      carrera: '' 
+    },
+    weeks: [],
+    docente: '',
+    reglamento: 'Artículo 20. Normativo de Evaluación y Promoción de los estudiantes del Centro Universitarios de Occidente. "Los requisitos para someterse a exámenes finales de recuperación son: estar legalmente inscrito, tener asignado el curso, haber llenado el mínimo de puntos de zona que establece este Normativo, presentar su carné de estudiante, u otro medio de identificación a criterio del examinador, su recibo de haber pagado los derechos de exámenes, y haber cumplido con el 80% de asistencia".',
+    biblio: '',
+    // NUEVO: Datos específicos del formulario para cada curso
+    formData: {
+      universidad: 'Universidad de San Carlos de Guatemala',
+      centro: 'Centro Universitario de Occidente (CUNOC)',
+      division: 'Ciencias Económicas (CCEE)',
+      carrera: 'Administración de Empresas',
+      cod_carrera: '120004',
+      cod_curso: '482',
+      clar_credit: '0.00',
+      curso: 'Nuevo Curso',
+      requisito: 'Mercadotecnia I (Código 123)',
+      postrequisito: '—',
+      ciclo_academico: 'Primer Semestre',
+      semestre: 'Primero',
+      anio_academico: '2025',
+      titulo_docente: 'PEM en Psicología',
+      email: 'nombre.apellido@cunoc.edu.gt',
+      acuerdo_carrera: '',
+      horario: 'Lunes: 15:45 a 17:15 horas  |  Martes: 16:30 a 17:15 horas',
+      seccion: 'B',
+      desc_curso: '',
+      objetivos: ''
+    },
+    // NUEVO: Almacenamiento de firmas
+    firmas: {
+      docentes: [],
+      coordinador: ''
     }
-    
-    if (courses[selectedId]) {
-        loadCourse(selectedId);
-    } else {
-        console.warn('Curso no encontrado:', selectedId);
-        if (Object.keys(courses).length > 0) {
-            loadCourse(Object.keys(courses)[0]);
-        } else {
-            createDefaultCourse();
-        }
-    }
-  }
+  };
+}
 
-  // MEJORA: Función mejorada para cargar curso
-  function loadCourse(courseId) {
-    if (!courses[courseId]) {
-        console.error('Curso no encontrado:', courseId);
-        if (Object.keys(courses).length > 0) {
-            courseId = Object.keys(courses)[0];
-        } else {
-            createDefaultCourse();
-            return;
-        }
-    }
-    
-    currentCourseId = courseId;
-    localStorage.setItem(CURRENT_COURSE_KEY, courseId);
-    
-    const course = courses[courseId];
-    
-    // Aplicar el estado del curso
-    applyState(course.data);
-    
-    // Asegurar que el nombre del curso esté sincronizado
-    document.getElementById('fld-curso').value = course.name || 'Curso sin nombre';
-    
-    // Actualizar interfaz
-    document.getElementById('course-select').value = courseId;
-    document.title = `INSTRUMENTO CLAR – ${course.name}`;
-    
-    // Sincronizar campos para PDF
-    syncPrintFields();
-    
-    console.log(`Curso cargado: ${course.name} (ID: ${courseId})`);
-  }
+// ======= Utilidades =======
+function autoResize(el){ if(!el) return; el.style.height='auto'; el.style.height = (el.scrollHeight) + 'px'; }
+function initAutosize(scope){ (scope||document).querySelectorAll('textarea').forEach(t=>{ autoResize(t); t.addEventListener('input', ()=>autoResize(t)); }); }
+function parseLocalDate(str){ if (typeof str !== 'string') return new Date(str); const parts = str.split('-'); if (parts.length!==3) return new Date(str); const y=+parts[0], mo=+parts[1]-1, d=+parts[2]; return new Date(y, mo, d); }
+function addDays(date, days){ const d=new Date(date.getTime()); d.setDate(d.getDate()+days); return d; }
+function toMonday(date){ const d=new Date(date.getTime()); const day=d.getDay(); const diff=(day===0?-6:1-day); d.setDate(d.getDate()+diff); return d; }
+function formatDMY(date){ const dd=String(date.getDate()).padStart(2,'0'); const mm=String(date.getMonth()+1).padStart(2,'0'); const yyyy=date.getFullYear(); return `${dd}/${mm}/${yyyy}`; }
+function endOfWorkWeek(monday){ return addDays(monday, 4); }
+function parseNum(val){ if(val==null||val==='') return 0; return parseFloat(String(val).replace(',', '.'))||0; }
 
-  // MEJORA: Validación mejorada al renombrar
-  function renameCurrentCourse() {
-    if (!currentCourseId) {
-        alert('No hay curso seleccionado para renombrar.');
-        return;
-    }
-    
-    const currentName = courses[currentCourseId].name;
-    const newName = prompt('Nuevo nombre del curso:', currentName);
-    
-    if (newName && newName.trim() !== '') {
-        const trimmedName = newName.trim();
-        courses[currentCourseId].name = trimmedName;
-        
-        // Actualizar también el campo del nombre del curso
-        document.getElementById('fld-curso').value = trimmedName;
-        
-        saveCourses();
-        updateCourseSelect();
-        syncPrintFields();
-        
-        console.log(`Curso renombrado: "${currentName}" → "${trimmedName}"`);
-    }
-  }
+// ======= Sincronización de campos para PDF =======
+function syncPrintFields() {
+  // Sincronizar todos los campos con sus versiones de impresión
+  const fields = [
+    { input: 'fld-carrera', print: 'print-carrera' }, // CORRECCIÓN: Agregado campo carrera
+    { input: 'fld-cod-carrera', print: 'print-cod-carrera' },
+    { input: 'fld-cod-curso', print: 'print-cod-curso' },
+    { input: 'fld-clar', print: 'print-clar' },
+    { input: 'fld-curso', print: 'print-curso' },
+    { input: 'fld-requisito', print: 'print-requisito' },
+    { input: 'fld-postreq', print: 'print-postreq' },
+    { input: 'fld-ciclo', print: 'print-ciclo' },
+    { input: 'fld-semestre', print: 'print-semestre' },
+    { input: 'fld-anio', print: 'print-anio' },
+    { input: 'fld-titulo', print: 'print-titulo' },
+    { input: 'fld-email', print: 'print-email' },
+    { input: 'fld-acuerdo', print: 'print-acuerdo' },
+    { input: 'fld-horario', print: 'print-horario' },
+    { input: 'fld-seccion', print: 'print-seccion' },
+    { input: 'fld-desc', print: 'print-desc' },
+    { input: 'fld-obj', print: 'print-obj' },
+    { input: 'biblio-egrafia', print: 'print-biblio' }
+  ];
 
-  // MEJORA: Función mejorada para eliminar curso
-  function deleteCurrentCourse() {
-    if (!currentCourseId) {
-        alert('No hay curso seleccionado para eliminar.');
-        return;
-    }
-    
-    const courseName = courses[currentCourseId].name;
-    
-    if (confirm(`¿Está seguro de eliminar el curso "${courseName}"? Esta acción no se puede deshacer.`)) {
-        delete courses[currentCourseId];
-        saveCourses();
-        updateCourseSelect();
-        
-        // Cargar otro curso o crear uno nuevo
-        const remainingIds = Object.keys(courses);
-        if (remainingIds.length > 0) {
-            loadCourse(remainingIds[0]);
-        } else {
-            createDefaultCourse();
-        }
-        
-        console.log(`Curso eliminado: ${courseName}`);
-    }
-  }
-
-  // MEJORA: Actualizar la función updateCourseSelect para mayor robustez
-  function updateCourseSelect() {
-    const select = document.getElementById('course-select');
-    const currentValue = select.value;
-    
-    select.innerHTML = '<option value="">Seleccionar curso...</option>';
-    
-    Object.keys(courses).forEach(id => {
-        const course = courses[id];
-        const option = document.createElement('option');
-        option.value = id;
-        option.textContent = course.name || `Curso ${id}`;
-        
-        // Resaltar el curso actual
-        if (id === currentCourseId) {
-            option.selected = true;
-        }
-        
-        select.appendChild(option);
-    });
-    
-    // Si no hay curso seleccionado pero hay cursos, seleccionar el primero
-    if (!currentCourseId && Object.keys(courses).length > 0) {
-        const firstCourseId = Object.keys(courses)[0];
-        select.value = firstCourseId;
-    } else if (currentCourseId) {
-        select.value = currentCourseId;
-    }
-  }
-
-  // MEJORA: Función para verificar la integridad de los datos del curso
-  function validateCourseData(courseData) {
-    if (!courseData) return false;
-    if (!courseData.name || typeof courseData.name !== 'string') return false;
-    if (!courseData.data || typeof courseData.data !== 'object') return false;
-    
-    return true;
-  }
-
-  function loadCourses() {
-    try {
-      const saved = localStorage.getItem(COURSES_STORAGE_KEY);
-      if (saved) {
-        courses = JSON.parse(saved);
+  fields.forEach(field => {
+    const inputEl = document.getElementById(field.input);
+    const printEl = document.getElementById(field.print);
+    if (inputEl && printEl) {
+      if (inputEl.tagName === 'SELECT') {
+        printEl.textContent = inputEl.options[inputEl.selectedIndex].text;
+      } else {
+        printEl.textContent = inputEl.value;
       }
-    } catch (e) {
-      console.warn('Error cargando cursos:', e);
-      courses = {};
     }
-  }
+  });
 
-  function saveCourses() {
-    try {
-      localStorage.setItem(COURSES_STORAGE_KEY, JSON.stringify(courses));
-    } catch (e) {
-      console.warn('Error guardando cursos:', e);
-      alert('Error al guardar cursos. El almacenamiento puede estar lleno.');
+  // Sincronizar docentes
+  const docenteItems = document.querySelectorAll('.docente-item');
+  const docentePrints = document.querySelectorAll('.docente-print');
+  docenteItems.forEach((item, index) => {
+    if (docentePrints[index]) {
+      docentePrints[index].textContent = item.value;
     }
-  }
+  });
 
-  function exportCurrentCourse() {
-    if (!currentCourseId) return;
-    
-    const course = courses[currentCourseId];
-    const exportData = {
-      version: '4.0',
-      exportedAt: new Date().toISOString(),
-      course: course
-    };
-    
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `curso_clar_${course.name.replace(/[^a-z0-9]/gi, '_')}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }
+  // CORRECCIÓN: Sincronizar nombres de docentes en la sección de firmas
+  const docenteFirmaItems = document.querySelectorAll('.docente-firma-item');
+  docenteFirmaItems.forEach(item => {
+    // Los nombres ya están sincronizados automáticamente en esta sección
+  });
+}
 
-  function importCourseFromFile(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const importData = JSON.parse(e.target.result);
-        
-        if (importData.version && importData.course) {
-          const course = importData.course;
-          const courseId = 'imported_' + Date.now();
-          
-          courses[courseId] = {
-            ...course,
-            id: courseId,
-            importedAt: new Date().toISOString()
-          };
-          
-          saveCourses();
-          updateCourseSelect();
-          loadCourse(courseId);
-          
-          alert(`Curso "${course.name}" importado exitosamente.`);
-        } else {
-          alert('El archivo no es un curso válido.');
-        }
-      } catch (error) {
-        alert('Error al importar el curso: ' + error.message);
-      }
-    };
-    
-    reader.readAsText(file);
-    event.target.value = ''; // Reset input
-  }
+// ======= CORRECCIÓN: Gestión de docentes mejorada =======
+function syncDocentesToHidden(){
+  const list = document.getElementById('docentes-list');
+  const hidden = document.getElementById('fld-docente');
+  if(!list || !hidden) return;
+  
+  const vals = Array.from(list.querySelectorAll('.docente-item'))
+    .map(t=>t.value.trim())
+    .filter(Boolean);
+  hidden.value = vals.join('\\n');
+  syncPrintFields(); // Sincronizar también para PDF
+  syncDocentesToFirmas(); // Sincronizar con sección de firmas
+}
 
-  // MEJORA: Datos por defecto más completos para cada curso
-  function getDefaultCourseData() {
-    return {
-      controls: { 
-        weeks: 16, 
-        start: '', 
-        snap: true 
-      },
-      logos: { 
-        univ: '', 
-        carrera: '' 
-      },
-      weeks: [],
-      docente: '',
-      reglamento: 'Artículo 20. Normativo de Evaluación y Promoción de los estudiantes del Centro Universitarios de Occidente. "Los requisitos para someterse a exámenes finales de recuperación son: estar legalmente inscrito, tener asignado el curso, haber llenado el mínimo de puntos de zona que establece este Normativo, presentar su carné de estudiante, u otro medio de identificación a criterio del examinador, su recibo de haber pagado los derechos de exámenes, y haber cumplido con el 80% de asistencia".',
-      biblio: '',
-      // NUEVO: Datos específicos del formulario para cada curso
-      formData: {
-        universidad: 'Universidad de San Carlos de Guatemala',
-        centro: 'Centro Universitario de Occidente (CUNOC)',
-        division: 'Ciencias Económicas (CCEE)',
-        carrera: 'Administración de Empresas',
-        cod_carrera: '120004',
-        cod_curso: '482',
-        clar_credit: '0.00',
-        curso: 'Nuevo Curso',
-        requisito: 'Mercadotecnia I (Código 123)',
-        postrequisito: '—',
-        ciclo_academico: 'Primer Semestre',
-        semestre: 'Primero',
-        anio_academico: '2025',
-        titulo_docente: 'PEM en Psicología',
-        email: 'nombre.apellido@cunoc.edu.gt',
-        acuerdo_carrera: '',
-        horario: 'Lunes: 15:45 a 17:15 horas  |  Martes: 16:30 a 17:15 horas',
-        seccion: 'B',
-        desc_curso: '',
-        objetivos: ''
-      }
-    };
-  }
-
-  // ======= Utilidades =======
-  function autoResize(el){ if(!el) return; el.style.height='auto'; el.style.height = (el.scrollHeight) + 'px'; }
-  function initAutosize(scope){ (scope||document).querySelectorAll('textarea').forEach(t=>{ autoResize(t); t.addEventListener('input', ()=>autoResize(t)); }); }
-  function parseLocalDate(str){ if (typeof str !== 'string') return new Date(str); const parts = str.split('-'); if (parts.length!==3) return new Date(str); const y=+parts[0], mo=+parts[1]-1, d=+parts[2]; return new Date(y, mo, d); }
-  function addDays(date, days){ const d=new Date(date.getTime()); d.setDate(d.getDate()+days); return d; }
-  function toMonday(date){ const d=new Date(date.getTime()); const day=d.getDay(); const diff=(day===0?-6:1-day); d.setDate(d.getDate()+diff); return d; }
-  function formatDMY(date){ const dd=String(date.getDate()).padStart(2,'0'); const mm=String(date.getMonth()+1).padStart(2,'0'); const yyyy=date.getFullYear(); return `${dd}/${mm}/${yyyy}`; }
-  function endOfWorkWeek(monday){ return addDays(monday, 4); }
-  function parseNum(val){ if(val==null||val==='') return 0; return parseFloat(String(val).replace(',', '.'))||0; }
-
-  // ======= Sincronización de campos para PDF =======
-  function syncPrintFields() {
-    // Sincronizar todos los campos con sus versiones de impresión
-    const fields = [
-      { input: 'fld-cod-carrera', print: 'print-cod-carrera' },
-      { input: 'fld-cod-curso', print: 'print-cod-curso' },
-      { input: 'fld-clar', print: 'print-clar' },
-      { input: 'fld-curso', print: 'print-curso' },
-      { input: 'fld-requisito', print: 'print-requisito' },
-      { input: 'fld-postreq', print: 'print-postreq' },
-      { input: 'fld-ciclo', print: 'print-ciclo' },
-      { input: 'fld-semestre', print: 'print-semestre' },
-      { input: 'fld-anio', print: 'print-anio' },
-      { input: 'fld-titulo', print: 'print-titulo' },
-      { input: 'fld-email', print: 'print-email' },
-      { input: 'fld-acuerdo', print: 'print-acuerdo' },
-      { input: 'fld-horario', print: 'print-horario' },
-      { input: 'fld-seccion', print: 'print-seccion' },
-      { input: 'fld-desc', print: 'print-desc' },
-      { input: 'fld-obj', print: 'print-obj' },
-      { input: 'biblio-egrafia', print: 'print-biblio' }
-    ];
-
-    fields.forEach(field => {
-      const inputEl = document.getElementById(field.input);
-      const printEl = document.getElementById(field.print);
-      if (inputEl && printEl) {
-        if (inputEl.tagName === 'SELECT') {
-          printEl.textContent = inputEl.options[inputEl.selectedIndex].text;
-        } else {
-          printEl.textContent = inputEl.value;
-        }
-      }
-    });
-
-    // Sincronizar docentes
-    const docenteItems = document.querySelectorAll('.docente-item');
-    const docentePrints = document.querySelectorAll('.docente-print');
-    docenteItems.forEach((item, index) => {
-      if (docentePrints[index]) {
-        docentePrints[index].textContent = item.value;
-      }
-    });
-
-    // Sincronizar logos para PDF
-    const logoUniv = document.getElementById('logo-univ-img');
-    const logoCarrera = document.getElementById('logo-carrera-img');
-    const pdfLogoUniv = document.getElementById('pdf-logo-univ');
-    const pdfLogoCarrera = document.getElementById('pdf-logo-carrera');
-
-    if (logoUniv && pdfLogoUniv) {
-      pdfLogoUniv.src = logoUniv.src;
-    }
-    if (logoCarrera && pdfLogoCarrera) {
-      pdfLogoCarrera.src = logoCarrera.src;
-    }
-  }
-
-  // ======= Inicialización de logos =======
-  function initLogos(){
-    // Logo del CUNOC - URL actualizada
-    const logoUniv = document.getElementById('logo-univ-img');
-    const logoCarrera = document.getElementById('logo-carrera-img');
-    const pdfLogoUniv = document.getElementById('pdf-logo-univ');
-    const pdfLogoCarrera = document.getElementById('pdf-logo-carrera');
-    
-    // Logo CUNOC funcional
-    if(logoUniv) {
-      logoUniv.src = 'https://ddo.usac.edu.gt/wp-content/uploads/2024/03/Logo-CUNOC.jpg';
-      logoUniv.alt = 'USAC CUNOC';
-      logoUniv.onerror = function() {
-        // Fallback si la imagen no carga
-        this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0iI0VBRkFFMyIvPgo8dGV4dCB4PSI0MCIgeT0iNDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxNkExN0EiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCI+VVNBQzwvdGV4dD4KPHRleHQgeD0iNDAiIHk9IjU4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTZBMTdBIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOCI+Q1VOT0M8L3RleHQ+Cjwvc3ZnPg==';
-      };
-    }
-    
-    // Logo de carrera
-    if(logoCarrera) {
-      logoCarrera.src = 'https://th.bing.com/th/id/OIP.1jxBFAS5oRV3u1SV7rTBNAHaHa?rs=1&pid=ImgDetMain';
-      logoCarrera.alt = 'Logo Carrera';
-      logoCarrera.onerror = function() {
-        // Fallback si la imagen no carga
-        this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iOCIgZmlsbD0iI0VBRkFFMyIvPgo8dGV4dCB4PSI0MCIgeT0iNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxNkExN0EiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCI+Q2FycmVyYTwvdGV4dD4KPC9zdmc+';
-      };
-    }
-
-    // Sincronizar logos PDF
-    if (pdfLogoUniv && logoUniv) {
-      pdfLogoUniv.src = logoUniv.src;
-    }
-    if (pdfLogoCarrera && logoCarrera) {
-      pdfLogoCarrera.src = logoCarrera.src;
-    }
-  }
-
-  // ======= CORRECCIÓN: Gestión de docentes mejorada =======
-  function syncDocentesToHidden(){
-    const list = document.getElementById('docentes-list');
-    const hidden = document.getElementById('fld-docente');
-    if(!list || !hidden) return;
-    
-    const vals = Array.from(list.querySelectorAll('.docente-item'))
-      .map(t=>t.value.trim())
-      .filter(Boolean);
-    hidden.value = vals.join('\\n');
-    syncPrintFields(); // Sincronizar también para PDF
-  }
-
-  function initDocentes() {
-    // Solo inicializar una vez
-    if (docenteEventInitialized) return;
-    
-    const list = document.getElementById('docentes-list');
-    if (!list) return;
-    
-    // Event listener para sincronización de inputs
-    list.addEventListener('input', syncDocentesToHidden);
-    
-    // Event listener para agregar y eliminar docentes
-    document.addEventListener('click', (evt)=>{
-      // Manejar agregar docente
-      const addBtn = evt.target.closest('.add-doc-inline');
-      if(addBtn){
-        evt.preventDefault();
-        evt.stopPropagation(); // Prevenir múltiples ejecuciones
-        
-        const list = document.getElementById('docentes-list');
-        const row=document.createElement('div');
-        row.className='docente-row';
-        row.innerHTML='<textarea class="docente-item" placeholder="Nombre del docente"></textarea><div class="print-field docente-print" style="display:none"></div><button type="button" class="del-doc" title="Eliminar docente">×</button>';
-        list.appendChild(row);
-        const ta=row.querySelector('textarea'); 
-        autoResize(ta); 
-        ta.focus();
-        syncDocentesToHidden();
-        return;
-      }
+function initDocentes() {
+  // Solo inicializar una vez
+  if (docenteEventInitialized) return;
+  
+  const list = document.getElementById('docentes-list');
+  if (!list) return;
+  
+  // Event listener para sincronización de inputs
+  list.addEventListener('input', syncDocentesToHidden);
+  
+  // Event listener para agregar y eliminar docentes
+  document.addEventListener('click', (evt)=>{
+    // Manejar agregar docente
+    const addBtn = evt.target.closest('.add-doc-inline');
+    if(addBtn){
+      evt.preventDefault();
+      evt.stopPropagation(); // Prevenir múltiples ejecuciones
       
-      // Manejar eliminar docente
-      const delBtn = evt.target.closest('.del-doc');
-      if(delBtn && list.contains(delBtn)){
-        const row = delBtn.closest('.docente-row');
-        if(row){
-          if(list.querySelectorAll('.docente-row').length > 1){ 
-            row.remove(); 
-          } else { 
-            row.querySelector('.docente-item').value=''; 
-          }
-          syncDocentesToHidden();
-        }
-      }
-    });
-    
-    docenteEventInitialized = true;
-  }
-
-  // ======= Filas de sesiones =======
-  function createSessionRow(idx, session, modality, modClass){
-    return `
-      <tr class="${modClass}">
-        <td>${session}</td>
-        <td>${modality}</td>
-        <td class="description-cell"><textarea aria-label="Descripción ${session} ${idx}" oninput="autoResize(this)"></textarea></td>
-        <td><input type="number" min="0" step="any" class="short-input minutos" aria-label="Minutos ${session} ${idx}" /></td>
-        <td><input type="number" min="0" step="any" class="short-input puntos-netos" aria-label="Puntos netos ${session} ${idx}" /></td>
-        <td><input type="number" class="short-input puntos-acumulados" readonly aria-label="Puntos acumulados ${session} ${idx}" /></td>
-      </tr>`;
-  }
-
-  // ======= Crear semana =======
-  function addWeek(startDateOverride){
-    weekCount++;
-    const container=document.getElementById('weeks-container');
-    const weekDiv=document.createElement('section');
-    weekDiv.className='week';
-    weekDiv.setAttribute('aria-labelledby', `wk-${weekCount}-title`);
-
-    let labelFecha=''; let rangeHTML='';
-    if(startDateOverride instanceof Date){
-      const d=new Date(startDateOverride.getTime());
-      const monday=toMonday(d); const friday=endOfWorkWeek(monday);
-      labelFecha = ` — Inicio: ${formatDMY(d)}`;
-      rangeHTML = `<div class="week-range">Semana del ${formatDMY(monday)} al ${formatDMY(friday)} (Lun–Vie)</div>`;
-    }
-
-    weekDiv.innerHTML = `
-      <h2 id="wk-${weekCount}-title">Semana ${weekCount}${labelFecha}</h2>
-      ${rangeHTML}
-      <table aria-label="Tabla de sesiones semana ${weekCount}">
-        <thead>
-          <tr>
-            <th>Sesión</th>
-            <th>Modalidad</th>
-            <th>Descripción</th>
-            <th>Minutos</th>
-            <th>Puntos netos</th>
-            <th>Puntos acumulados</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${['1','2','3'].map((s, i)=>`
-            ${createSessionRow(i+1, 'Sesión '+s, 'Presencial teórico/ virtual/sincrónico', 'mod-teo')}
-            ${createSessionRow(i+1, 'Sesión '+s, 'Presencial práctico/virtual/sincrónico. Interacción de profesor y estudiante', 'mod-pra')}
-            ${createSessionRow(i+1, 'Sesión '+s, 'No presencial (autónomo)', 'mod-aut')}
-          `).join('')}
-        </tbody>
-      </table>
-      <div class="week-summary" aria-live="polite">
-        <span class="badge" data-week-min>Total minutos: <strong class="val">0</strong></span>
-        <span class="badge" data-week-hrs>Horas: <strong class="val">0.00</strong></span>
-        <span class="badge" data-week-pts>Total puntos: <strong class="val">0.00</strong> <span class="note-muted">(objetivo recomendado ≤ 100)</span></span>
-      </div>`;
-
-    container.appendChild(weekDiv);
-    initAutosize(weekDiv);
-
-    weekDiv.querySelectorAll('.puntos-netos, .minutos').forEach(inp=>{
-      inp.addEventListener('input', ()=>{ computeAll(); });
-      inp.addEventListener('change', ()=>{ computeAll(); });
-    });
-
-    computeAll();
-  }
-
-  // ======= Etiquetar última semana como examen =======
-  function tagExamWeek(){
-    document.querySelectorAll('.week .exam-badge').forEach(e=>e.remove());
-    const weeks = document.querySelectorAll('#weeks-container .week');
-    if(weeks.length===0) return;
-    const last = weeks[weeks.length-1];
-    const badge = document.createElement('div');
-    badge.className='exam-badge';
-    badge.textContent='Examen final (máx. 30 pts)';
-    last.appendChild(badge);
-  }
-
-  // ======= Cálculos y EVALUACIÓN =======
-  function computeAll(){
-    let totalMinutes = 0;
-    document.querySelectorAll('#weeks-container .minutos').forEach(i=>{ const v=parseNum(i.value); if(v>=0) totalMinutes += v; });
-
-    // Puntos acumulados por semana + totales por semana
-    document.querySelectorAll('#weeks-container .week').forEach(week=>{
-      let runningPts = 0; const rows = week.querySelectorAll('.puntos-netos');
-      const acc = week.querySelectorAll('.puntos-acumulados');
-      let weekMin = 0; let weekPts = 0;
-      rows.forEach((inp, idx)=>{ const pts=(parseNum(inp.value)||0); runningPts += pts; if(acc[idx]) acc[idx].value = runningPts.toFixed(2); weekPts += pts; });
-      week.querySelectorAll('.minutos').forEach(inp=>{ const m=(parseNum(inp.value)||0); weekMin += m; });
-      const weekHrs = weekMin/60;
-      const badgeMin = week.querySelector('[data-week-min] .val'); if(badgeMin) badgeMin.textContent = String(Math.round(weekMin));
-      const badgeHrs = week.querySelector('[data-week-hrs] .val'); if(badgeHrs) badgeHrs.textContent = weekHrs.toFixed(2);
-      const badgePts = week.querySelector('[data-week-pts]'); if(badgePts){ const val=badgePts.querySelector('.val'); if(val) val.textContent = weekPts.toFixed(2); badgePts.classList.toggle('warn', weekPts>100); }
-    });
-
-    const totalHours = totalMinutes / 60; const clarTotal = totalHours / CLAR_DIVISOR;
-    const result = document.getElementById('validation-result');
-    if(result){ result.textContent = `CLAR total (Σ horas / ${CLAR_DIVISOR}): ${clarTotal.toFixed(2)}  ·  Horas: ${totalHours.toFixed(2)}  ·  Minutos: ${totalMinutes.toFixed(0)}`; }
-
-    tagExamWeek();
-    computeEvaluationSection();
-    computeSummaryReport();
-  }
-
-  function computeEvaluationSection(){
-    const weeks = Array.from(document.querySelectorAll('#weeks-container .week'));
-    let procesoNet = 0;
-    let examenNet = 0;
-    weeks.forEach((week, i)=>{
-      let sum = 0;
-      week.querySelectorAll('.puntos-netos').forEach(inp=>{ sum += parseNum(inp.value)||0; });
-      if(i === weeks.length-1){ examenNet = sum; } else { procesoNet += sum; }
-    });
-
-    const procesoRaw = procesoNet;
-    const examenRaw = examenNet;
-    const procesoPts = Math.min(70, procesoRaw);
-    const examenPts  = Math.min(30, examenRaw);
-    const total = procesoPts + examenPts;
-
-    // Alertas al cruzar el límite
-    if(procesoRaw > 70 && !warnedProceso){ warnedProceso = true; alert('⚠️ La PONDERACIÓN DEL PROCESO DE APRENDIZAJE supera los 70 puntos (semanas 1 a N-1).'); }
-    if(procesoRaw <= 70 && warnedProceso){ warnedProceso = false; }
-    if(examenRaw > 30 && !warnedExamen){ warnedExamen = true; alert('⚠️ El EXAMEN FINAL supera los 30 puntos (última semana).'); }
-    if(examenRaw <= 30 && warnedExamen){ warnedExamen = false; }
-
-    const html = `
-      <div class="eval-title">EVALUACIÓN</div>
-      <table class="eval-table">
-        <thead>
-          <tr class="eval-head">
-            <th>Concepto</th>
-            <th>Puntos</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="${procesoRaw>70?'over-cap':''}">
-            <td>Ponderación del proceso de aprendizaje (semanas 1 a N-1, máx. 70)</td>
-            <td>${procesoPts.toFixed(2)}${procesoRaw>70?'*':''}</td>
-          </tr>
-          <tr class="${examenRaw>30?'over-cap':''}">
-            <td>Examen final (suma de la última semana, máx. 30)</td>
-            <td>${examenPts.toFixed(2)}${examenRaw>30?'*':''}</td>
-          </tr>
-          <tr class="eval-total">
-            <td>Total acumulado</td>
-            <td>${total.toFixed(2)}</td>
-          </tr>
-        </tbody>
-      </table>
-      ${(procesoRaw>70||examenRaw>30)?'<div class="final-note">* El valor mostrado fue recortado al máximo permitido.</div>':''}`;
-
-    const mount=document.getElementById('evaluation-section');
-    if(mount) mount.innerHTML = html;
-  }
-
-  // ======= Reporte final =======
-  function computeSummaryReport(){
-    const sumBy = { teo:0, pra:0, aut:0 };
-    document.querySelectorAll('#weeks-container .minutos').forEach(inp=>{
-      const val=parseNum(inp.value); const v=Number.isFinite(val)?val:0; const tr=inp.closest('tr'); if(!tr) return;
-      if(tr.classList.contains('mod-teo')) sumBy.teo += v;
-      else if(tr.classList.contains('mod-pra')) sumBy.pra += v;
-      else if(tr.classList.contains('mod-aut')) sumBy.aut += v;
-    });
-    const hours = { teo:sumBy.teo/60, pra:sumBy.pra/60, aut:sumBy.aut/60 };
-    const totals = {
-      min: sumBy.teo + sumBy.pra + sumBy.aut,
-      hrs: (sumBy.teo + sumBy.pra + sumBy.aut)/60,
-      clar: ((sumBy.teo + sumBy.pra + sumBy.aut)/60) / CLAR_DIVISOR,
-    };
-    const fmt = (n,d=2)=> Number.isFinite(n) ? n.toFixed(d) : '0.00';
-
-    const clarField = document.querySelector('.master-header [data-field="clar_credit"]');
-    if(clarField) clarField.value = totals.clar.toFixed(2);
-
-    const html = `
-      <div class="report-title">REPORTE FINAL</div>
-      <table class="report-table">
-        <thead>
-          <tr class="report-head">
-            <th>TIPO DE TRABAJO</th>
-            <th>Minutos por Semestre</th>
-            <th>Horas por Semestre (min/60)</th>
-            <th>CLAR</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="row-teo">
-            <td>Presencial teórico/ virtual/sincrónico</td>
-            <td>${fmt(sumBy.teo,0)}</td>
-            <td>${fmt(hours.teo,2)}</td>
-            <td class="clar-merged" rowspan="4">${totals.clar.toFixed(2)}</td>
-          </tr>
-          <tr class="row-pra">
-            <td>Presencial práctico/virtual/sincrónico. Interacción de profesor y estudiante</td>
-            <td>${fmt(sumBy.pra,0)}</td>
-            <td>${fmt(hours.pra,2)}</td>
-          </tr>
-          <tr class="row-aut">
-            <td><strong>Autónomo</strong></td>
-            <td>${fmt(sumBy.aut,0)}</td>
-            <td>${fmt(hours.aut,2)}</td>
-          </tr>
-          <tr class="row-total">
-            <td><strong>Total</strong></td>
-            <td><strong>${fmt(totals.min,0)}</strong></td>
-            <td><strong>${fmt(totals.hrs,2)}</strong></td>
-          </tr>
-        </tbody>
-      </table>`;
-    const mount=document.getElementById('summary-report');
-    if(mount) mount.innerHTML = html;
-  }
-
-  // ======= Controladores - CORREGIDO =======
-  function generateWeeksFromControls(){
-    try{
-      const countEl=document.getElementById('weeks-count');
-      const startEl=document.getElementById('weeks-start');
-      const snapEl=document.getElementById('weeks-snap');
-      const n=parseInt(countEl.value,10);
-      if(!Number.isInteger(n)||n<=0){ alert('Ingrese un número válido de semanas.'); return; }
-      const baseRaw = startEl.value ? parseLocalDate(startEl.value) : new Date();
-      if(isNaN(baseRaw.getTime())){ alert('Fecha inválida. Use el selector de fecha.'); return; }
-      const base = snapEl && snapEl.checked ? toMonday(baseRaw) : baseRaw;
-      const container=document.getElementById('weeks-container'); container.innerHTML=''; weekCount=0;
-      for(let i=0;i<n;i++) addWeek(addDays(base, 7*i));
-      initDocentes(); // Inicializar docentes solo una vez
-      initAutosize(document);
-      computeAll();
-    }catch(e){ console.error(e); alert('No se pudieron crear las semanas desde la barra.'); }
-  }
-
-  // ======= MEJORA: Persistencia mejorada con datos de formulario independientes =======
-  function collectCurrentState(){
-    const state={
-      controls:{ 
-        weeks: parseInt(document.getElementById('weeks-count').value||'0',10), 
-        start: document.getElementById('weeks-start').value||'', 
-        snap: !!document.getElementById('weeks-snap').checked 
-      },
-      logos:{ 
-        univ: document.getElementById('logo-univ-img')?.getAttribute('src')||'', 
-        carrera: document.getElementById('logo-carrera-img')?.getAttribute('src')||'' 
-      },
-      weeks:[],
-      docente: document.getElementById('fld-docente')?.value||'',
-      reglamento: document.getElementById('eval-reglamento')?.value||'',
-      biblio: document.getElementById('biblio-egrafia')?.value||'',
-      // NUEVO: Recoger todos los datos del formulario
-      formData: {}
-    };
-
-    // Recoger todos los campos del formulario
-    const formFields = document.querySelectorAll('.master-header [data-field]');
-    formFields.forEach(field => {
-      const fieldName = field.getAttribute('data-field');
-      if (fieldName) {
-        if (field.tagName === 'SELECT') {
-          state.formData[fieldName] = field.options[field.selectedIndex].text;
-        } else {
-          state.formData[fieldName] = field.value;
-        }
-      }
-    });
-
-    // Recoger datos de semanas
-    document.querySelectorAll('#weeks-container .week').forEach(week=>{
-      const rows = Array.from(week.querySelectorAll('tbody tr')).map(tr=>({ 
-        desc: tr.querySelector('textarea')?.value||'', 
-        min: tr.querySelector('input.minutos')?.value||'', 
-        pts: tr.querySelector('input.puntos-netos')?.value||'' 
-      }));
-      state.weeks.push({ rows });
-    });
-    
-    return state;
-  }
-
-  // MEJORA: Aplicar estado con datos de formulario independientes
-  function applyState(state){
-    if(!state) return;
-    
-    try{
-      document.getElementById('weeks-count').value = state.controls.weeks || 16;
-      document.getElementById('weeks-start').value = state.controls.start || '';
-      document.getElementById('weeks-snap').checked = !!state.controls.snap;
-      generateWeeksFromControls();
-    }catch(e){ console.warn('No se pudo regenerar estructura:', e); }
-    
-    // Aplicar datos del formulario si existen
-    if(state.formData) {
-      Object.keys(state.formData).forEach(fieldName => {
-        const field = document.querySelector(`[data-field="${fieldName}"]`);
-        if (field) {
-          if (field.tagName === 'SELECT') {
-            // Para selects, buscar la opción que coincida con el valor guardado
-            const options = field.options;
-            for (let i = 0; i < options.length; i++) {
-              if (options[i].text === state.formData[fieldName]) {
-                field.selectedIndex = i;
-                break;
-              }
-            }
-          } else {
-            field.value = state.formData[fieldName] || '';
-          }
-        }
-      });
-    }
-    
-    // Aplicar docentes
-    if(state.docente){ 
-      const list = document.getElementById('docentes-list'); 
-      list.innerHTML=''; 
-      state.docente.split(/\\n+/).forEach(n=>{ 
-        const row=document.createElement('div'); 
-        row.className='docente-row'; 
-        row.innerHTML='<textarea class="docente-item" placeholder="Nombre del docente"></textarea><div class="print-field docente-print" style="display:none"></div><button type="button" class="del-doc" title="Eliminar docente">×</button>'; 
-        row.querySelector('textarea').value=n; 
-        list.appendChild(row); 
-      }); 
+      const list = document.getElementById('docentes-list');
+      const row=document.createElement('div');
+      row.className='docente-row';
+      row.innerHTML='<textarea class="docente-item" placeholder="Nombre del docente"></textarea><div class="print-field docente-print" style="display:none"></div><button type="button" class="del-doc" title="Eliminar docente">×</button>';
+      list.appendChild(row);
+      const ta=row.querySelector('textarea'); 
+      autoResize(ta); 
+      ta.focus();
       syncDocentesToHidden();
+      return;
     }
     
-    // Aplicar semanas
-    const weeks=document.querySelectorAll('#weeks-container .week');
-    weeks.forEach((weekEl, wi)=>{
-      const w=state.weeks[wi]; if(!w) return;
-      const trs=weekEl.querySelectorAll('tbody tr');
-      w.rows?.forEach((row, ri)=>{
-        const tr=trs[ri]; if(!tr) return;
-        const ta=tr.querySelector('textarea'); if(ta){ ta.value=row.desc||''; autoResize(ta); }
-        const min=tr.querySelector('input.minutos'); if(min){ min.value=row.min||''; }
-        const pts=tr.querySelector('input.puntos-netos'); if(pts){ pts.value=row.pts||''; }
-      });
-    });
-    
-    // Aplicar reglamento y bibliografía
-    document.getElementById('eval-reglamento').value = state.reglamento||'';
-    document.getElementById('biblio-egrafia').value = state.biblio||'';
-    
+    // Manejar eliminar docente
+    const delBtn = evt.target.closest('.del-doc');
+    if(delBtn && list.contains(delBtn)){
+      const row = delBtn.closest('.docente-row');
+      if(row){
+        if(list.querySelectorAll('.docente-row').length > 1){ 
+          row.remove(); 
+        } else { 
+          row.querySelector('.docente-item').value=''; 
+        }
+        syncDocentesToHidden();
+      }
+    }
+  });
+  
+  docenteEventInitialized = true;
+}
+
+// ======= MEJORA: Sincronizar docentes del encabezado con firmas =======
+function syncDocentesToFirmas() {
+  const docentesEncabezado = document.querySelectorAll('#docentes-list .docente-item');
+  const firmasContainer = document.getElementById('docentes-firmas-list');
+  
+  // Limpiar firmas existentes (excepto coordinador)
+  const coordinadorRow = firmasContainer.querySelector('.coordinador-firma-row');
+  firmasContainer.innerHTML = '';
+  
+  // Crear filas de firma para cada docente
+  docentesEncabezado.forEach((docente, index) => {
+    const nombre = docente.value.trim() || `Docente ${index + 1}`;
+    const firmaRow = crearFilaDocente(nombre);
+    firmasContainer.appendChild(firmaRow);
+  });
+  
+  // Agregar coordinador (mantener el existente o crear nuevo)
+  if (coordinadorRow) {
+    firmasContainer.appendChild(coordinadorRow);
+  } else {
+    const nuevoCoordinadorRow = crearFilaCoordinador();
+    firmasContainer.appendChild(nuevoCoordinadorRow);
+  }
+  
+  actualizarFirmasFinales();
+}
+
+// ======= MEJORA: Gestión de firmas de docentes =======
+function initFirmasDocentes() {
+  // Event listeners para cambios en firmas
+  document.addEventListener('change', (e) => {
+    if (e.target.classList.contains('firma-docente')) {
+      manejarCargaFirma(e.target);
+    }
+  });
+  
+  document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('docente-firma-item')) {
+      actualizarFirmasFinales();
+    }
+  });
+  
+  // Inicializar con docentes del encabezado
+  syncDocentesToFirmas();
+}
+
+// Crear nueva fila de docente
+function crearFilaDocente(nombre = '') {
+  const div = document.createElement('div');
+  div.className = 'docente-firma-row';
+  div.innerHTML = `
+    <input type="file" accept="image/*" class="firma-docente" title="Subir firma" />
+    <img class="firma-preview" alt="Firma" style="display:none;" />
+    <div class="docente-firma-item">${nombre}</div>
+  `;
+  return div;
+}
+
+// Crear fila de coordinador
+function crearFilaCoordinador() {
+  const div = document.createElement('div');
+  div.className = 'coordinador-firma-row';
+  div.innerHTML = `
+    <input type="file" accept="image/*" class="firma-docente" title="Subir firma del coordinador" />
+    <img class="firma-preview" alt="Firma Coordinador" style="display:none;" />
+    <div class="coordinador-firma-item" id="nombre-coordinador">M. Sc. Julio César López De León</div>
+    <div class="vobo-text">Vo. Bo. Coordinador de la carrera</div>
+  `;
+  return div;
+}
+
+// Manejar carga de imagen de firma
+function manejarCargaFirma(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const preview = input.closest('.docente-firma-row, .coordinador-firma-row').querySelector('.firma-preview');
+    preview.src = ev.target.result;
+    preview.style.display = 'block';
+    actualizarFirmasFinales();
+  };
+  reader.readAsDataURL(file);
+}
+
+// MEJORA: Actualizar firmas finales de forma simplificada
+function actualizarFirmasFinales() {
+  // Esta función se mantiene para compatibilidad pero ya no es necesaria
+  // ya que las firmas se muestran directamente en la misma sección
+}
+
+// ======= MEJORA: Asignar coordinador según carrera =======
+function asignarCoordinador(carrera) {
+  const nombreElem = document.getElementById('nombre-coordinador');
+  let nombre = '';
+  
+  switch (carrera) {
+    case 'Contaduría Pública y Auditoría':
+      nombre = 'M. Sc. Julio César López De León';
+      break;
+    case 'Administración de Empresas':
+      nombre = 'Dr. Walter Alfredo Santizo López';
+      break;
+    case 'Economía':
+      nombre = 'M. Sc. Julio Rodolfo Lima Ochoa';
+      break;
+    case 'Área Común':
+      nombre = 'M. Sc. Mauro Sierra Hengstemberg';
+      break;
+    default:
+      nombre = 'Coordinador Asignado';
+  }
+  
+  if (nombreElem) {
+    nombreElem.textContent = nombre;
+  }
+  
+  // Sincronizar para PDF
+  syncPrintFields();
+}
+
+// ======= Filas de sesiones =======
+function createSessionRow(idx, session, modality, modClass){
+  return `
+    <tr class="${modClass}">
+      <td>${session}</td>
+      <td>${modality}</td>
+      <td class="description-cell"><textarea aria-label="Descripción ${session} ${idx}" oninput="autoResize(this)"></textarea></td>
+      <td><input type="number" min="0" step="any" class="short-input minutos" aria-label="Minutos ${session} ${idx}" /></td>
+      <td><input type="number" min="0" step="any" class="short-input puntos-netos" aria-label="Puntos netos ${session} ${idx}" /></td>
+      <td><input type="number" class="short-input puntos-acumulados" readonly aria-label="Puntos acumulados ${session} ${idx}" /></td>
+    </tr>`;
+}
+
+// ======= Crear semana =======
+function addWeek(startDateOverride){
+  weekCount++;
+  const container=document.getElementById('weeks-container');
+  const weekDiv=document.createElement('section');
+  weekDiv.className='week';
+  weekDiv.setAttribute('aria-labelledby', `wk-${weekCount}-title`);
+
+  let labelFecha=''; let rangeHTML='';
+  if(startDateOverride instanceof Date){
+    const d=new Date(startDateOverride.getTime());
+    const monday=toMonday(d); const friday=endOfWorkWeek(monday);
+    labelFecha = ` — Inicio: ${formatDMY(d)}`;
+    rangeHTML = `<div class="week-range">Semana del ${formatDMY(monday)} al ${formatDMY(friday)} (Lun–Vie)</div>`;
+  }
+
+  weekDiv.innerHTML = `
+    <h2 id="wk-${weekCount}-title">Semana ${weekCount}${labelFecha}</h2>
+    ${rangeHTML}
+    <table aria-label="Tabla de sesiones semana ${weekCount}">
+      <thead>
+        <tr>
+          <th>Sesión</th>
+          <th>Modalidad</th>
+          <th>Descripción</th>
+          <th>Minutos</th>
+          <th>Puntos netos</th>
+          <th>Puntos acumulados</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${['1','2','3'].map((s, i)=>`
+          ${createSessionRow(i+1, 'Sesión '+s, 'Presencial teórico/ virtual/sincrónico', 'mod-teo')}
+          ${createSessionRow(i+1, 'Sesión '+s, 'Presencial práctico/virtual/sincrónico. Interacción de profesor y estudiante', 'mod-pra')}
+          ${createSessionRow(i+1, 'Sesión '+s, 'No presencial (autónomo)', 'mod-aut')}
+        `).join('')}
+      </tbody>
+    </table>
+    <div class="week-summary" aria-live="polite">
+      <span class="badge" data-week-min>Total minutos: <strong class="val">0</strong></span>
+      <span class="badge" data-week-hrs>Horas: <strong class="val">0.00</strong></span>
+      <span class="badge" data-week-pts>Total puntos: <strong class="val">0.00</strong> <span class="note-muted">(objetivo recomendado ≤ 100)</span></span>
+    </div>`;
+
+  container.appendChild(weekDiv);
+  initAutosize(weekDiv);
+
+  weekDiv.querySelectorAll('.puntos-netos, .minutos').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ computeAll(); });
+    inp.addEventListener('change', ()=>{ computeAll(); });
+  });
+
+  computeAll();
+}
+
+// ======= Etiquetar última semana como examen =======
+function tagExamWeek(){
+  document.querySelectorAll('.week .exam-badge').forEach(e=>e.remove());
+  const weeks = document.querySelectorAll('#weeks-container .week');
+  if(weeks.length===0) return;
+  const last = weeks[weeks.length-1];
+  const badge = document.createElement('div');
+  badge.className='exam-badge';
+  badge.textContent='Examen final (máx. 30 pts)';
+  last.appendChild(badge);
+}
+
+// ======= Cálculos y EVALUACIÓN =======
+function computeAll(){
+  let totalMinutes = 0;
+  document.querySelectorAll('#weeks-container .minutos').forEach(i=>{ const v=parseNum(i.value); if(v>=0) totalMinutes += v; });
+
+  // Puntos acumulados por semana + totales por semana
+  document.querySelectorAll('#weeks-container .week').forEach(week=>{
+    let runningPts = 0; const rows = week.querySelectorAll('.puntos-netos');
+    const acc = week.querySelectorAll('.puntos-acumulados');
+    rows.forEach((inp, idx)=>{ const pts=(parseNum(inp.value)||0); runningPts += pts; if(acc[idx]) acc[idx].value = runningPts.toFixed(2); });
+    let weekMin = 0; let weekPts = 0;
+    week.querySelectorAll('.minutos').forEach(inp=>{ const m=(parseNum(inp.value)||0); weekMin += m; });
+    week.querySelectorAll('.puntos-netos').forEach(inp=>{ const p=(parseNum(inp.value)||0); weekPts += p; });
+    const weekHrs = weekMin/60;
+    const badgeMin = week.querySelector('[data-week-min] .val'); if(badgeMin) badgeMin.textContent = String(Math.round(weekMin));
+    const badgeHrs = week.querySelector('[data-week-hrs] .val'); if(badgeHrs) badgeHrs.textContent = weekHrs.toFixed(2);
+    const badgePts = week.querySelector('[data-week-pts]'); if(badgePts){ const val=badgePts.querySelector('.val'); if(val) val.textContent = weekPts.toFixed(2); badgePts.classList.toggle('warn', weekPts>100); }
+  });
+
+  const totalHours = totalMinutes / 60; const clarTotal = totalHours / CLAR_DIVISOR;
+  const result = document.getElementById('validation-result');
+  if(result){ result.textContent = `CLAR total (Σ horas / ${CLAR_DIVISOR}): ${clarTotal.toFixed(2)}  ·  Horas: ${totalHours.toFixed(2)}  ·  Minutos: ${totalMinutes.toFixed(0)}`; }
+
+  tagExamWeek();
+  computeEvaluationSection();
+  computeSummaryReport();
+}
+
+function computeEvaluationSection(){
+  const weeks = Array.from(document.querySelectorAll('#weeks-container .week'));
+  let procesoNet = 0;
+  let examenNet = 0;
+  weeks.forEach((week, i)=>{
+    let sum = 0;
+    week.querySelectorAll('.puntos-netos').forEach(inp=>{ sum += parseNum(inp.value)||0; });
+    if(i === weeks.length-1){ examenNet = sum; } else { procesoNet += sum; }
+  });
+
+  const procesoRaw = procesoNet;
+  const examenRaw = examenNet;
+  const procesoPts = Math.min(70, procesoRaw);
+  const examenPts  = Math.min(30, examenRaw);
+  const total = procesoPts + examenPts;
+
+  // Alertas al cruzar el límite
+  if(procesoRaw > 70 && !warnedProceso){ warnedProceso = true; alert('⚠️ La PONDERACIÓN DEL PROCESO DE APRENDIZAJE supera los 70 puntos (semanas 1 a N-1).'); }
+  if(procesoRaw <= 70 && warnedProceso){ warnedProceso = false; }
+  if(examenRaw > 30 && !warnedExamen){ warnedExamen = true; alert('⚠️ El EXAMEN FINAL supera los 30 puntos (última semana).'); }
+  if(examenRaw <= 30 && warnedExamen){ warnedExamen = false; }
+
+  const html = `
+    <div class="eval-title">EVALUACIÓN</div>
+    <table class="eval-table">
+      <thead>
+        <tr class="eval-head">
+          <th>Concepto</th>
+          <th>Puntos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="${procesoRaw>70?'over-cap':''}">
+          <td>Ponderación del proceso de aprendizaje (semanas 1 a N-1, máx. 70)</td>
+          <td>${procesoPts.toFixed(2)}${procesoRaw>70?'*':''}</td>
+        </tr>
+        <tr class="${examenRaw>30?'over-cap':''}">
+          <td>Examen final (suma de la última semana, máx. 30)</td>
+          <td>${examenPts.toFixed(2)}${examenRaw>30?'*':''}</td>
+        </tr>
+        <tr class="eval-total">
+          <td>Total acumulado</td>
+          <td>${total.toFixed(2)}</td>
+        </tr>
+      </tbody>
+    </table>
+    ${(procesoRaw>70||examenRaw>30)?'<div class="final-note">* El valor mostrado fue recortado al máximo permitido.</div>':''}`;
+
+  const mount=document.getElementById('evaluation-section');
+  if(mount) mount.innerHTML = html;
+}
+
+// ======= Reporte final =======
+function computeSummaryReport(){
+  const sumBy = { teo:0, pra:0, aut:0 };
+  document.querySelectorAll('#weeks-container .minutos').forEach(inp=>{
+    const val=parseNum(inp.value); const v=Number.isFinite(val)?val:0; const tr=inp.closest('tr'); if(!tr) return;
+    if(tr.classList.contains('mod-teo')) sumBy.teo += v;
+    else if(tr.classList.contains('mod-pra')) sumBy.pra += v;
+    else if(tr.classList.contains('mod-aut')) sumBy.aut += v;
+  });
+  const hours = { teo:sumBy.teo/60, pra:sumBy.pra/60, aut:sumBy.aut/60 };
+  const totals = {
+    min: sumBy.teo + sumBy.pra + sumBy.aut,
+    hrs: (sumBy.teo + sumBy.pra + sumBy.aut)/60,
+    clar: ((sumBy.teo + sumBy.pra + sumBy.aut)/60) / CLAR_DIVISOR,
+  };
+  const fmt = (n,d=2)=> Number.isFinite(n) ? n.toFixed(d) : '0.00';
+
+  const clarField = document.querySelector('.master-header [data-field="clar_credit"]');
+  if(clarField) clarField.value = totals.clar.toFixed(2);
+
+  const html = `
+    <div class="report-title">REPORTE FINAL</div>
+    <table class="report-table">
+      <thead>
+        <tr class="report-head">
+          <th>TIPO DE TRABAJO</th>
+          <th>Minutos por Semestre</th>
+          <th>Horas por Semestre (min/60)</th>
+          <th>CLAR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-teo">
+          <td>Presencial teórico/ virtual/sincrónico</td>
+          <td>${fmt(sumBy.teo,0)}</td>
+          <td>${fmt(hours.teo,2)}</td>
+          <td class="clar-merged" rowspan="4">${totals.clar.toFixed(2)}</td>
+        </tr>
+        <tr class="row-pra">
+          <td>Presencial práctico/virtual/sincrónico. Interacción de profesor y estudiante</td>
+          <td>${fmt(sumBy.pra,0)}</td>
+          <td>${fmt(hours.pra,2)}</td>
+        </tr>
+        <tr class="row-aut">
+          <td><strong>Autónomo</strong></td>
+          <td>${fmt(sumBy.aut,0)}</td>
+          <td>${fmt(hours.aut,2)}</td>
+        </tr>
+        <tr class="row-total">
+          <td><strong>Total</strong></td>
+          <td><strong>${fmt(totals.min,0)}</strong></td>
+          <td><strong>${fmt(totals.hrs,2)}</strong></td>
+        </tr>
+      </tbody>
+    </table>`;
+  const mount=document.getElementById('summary-report');
+  if(mount) mount.innerHTML = html;
+}
+
+// ======= Controladores - CORREGIDO =======
+function generateWeeksFromControls(){
+  try{
+    const countEl=document.getElementById('weeks-count');
+    const startEl=document.getElementById('weeks-start');
+    const snapEl=document.getElementById('weeks-snap');
+    const n=parseInt(countEl.value,10);
+    if(!Number.isInteger(n)||n<=0){ alert('Ingrese un número válido de semanas.'); return; }
+    const baseRaw = startEl.value ? parseLocalDate(startEl.value) : new Date();
+    if(isNaN(baseRaw.getTime())){ alert('Fecha inválida. Use el selector de fecha.'); return; }
+    const base = snapEl && snapEl.checked ? toMonday(baseRaw) : baseRaw;
+    const container=document.getElementById('weeks-container'); container.innerHTML=''; weekCount=0;
+    for(let i=0;i<n;i++) addWeek(addDays(base, 7*i));
+    initDocentes(); // Inicializar docentes solo una vez
+    initAutosize(document);
     computeAll();
-    syncPrintFields(); // Sincronizar campos para PDF
-  }
+  }catch(e){ console.error(e); alert('No se pudieron crear las semanas desde la barra.'); }
+}
 
-  // ======= Exportación =======
-  function prepareForPrint() {
-    syncPrintFields(); // Asegurar que todos los campos estén sincronizados
-  }
+// ======= MEJORA: Persistencia mejorada con datos de formulario independientes =======
+function collectCurrentState(){
+  const state={
+    controls:{ 
+      weeks: parseInt(document.getElementById('weeks-count').value||'0',10), 
+      start: document.getElementById('weeks-start').value||'', 
+      snap: !!document.getElementById('weeks-snap').checked 
+    },
+    logos:{ 
+      univ: '', 
+      carrera: '' 
+    },
+    weeks:[],
+    docente: document.getElementById('fld-docente')?.value||'',
+    reglamento: document.getElementById('eval-reglamento')?.value||'',
+    biblio: document.getElementById('biblio-egrafia')?.value||'',
+    // NUEVO: Recoger todos los datos del formulario
+    formData: {},
+    // NUEVO: Recoger firmas
+    firmas: {
+      docentes: [],
+      coordinador: ''
+    }
+  };
 
-  function exportPDF(){ 
-    prepareForPrint();
-    window.print(); 
+  // Recoger todos los campos del formulario
+  const formFields = document.querySelectorAll('.master-header [data-field]');
+  formFields.forEach(field => {
+    const fieldName = field.getAttribute('data-field');
+    if (fieldName) {
+      if (field.tagName === 'SELECT') {
+        state.formData[fieldName] = field.options[field.selectedIndex].text;
+      } else {
+        state.formData[fieldName] = field.value;
+      }
+    }
+  });
+
+  // Recoger datos de semanas
+  document.querySelectorAll('#weeks-container .week').forEach(week=>{
+    const rows = Array.from(week.querySelectorAll('tbody tr')).map(tr=>({ 
+      desc: tr.querySelector('textarea')?.value||'', 
+      min: tr.querySelector('input.minutos')?.value||'', 
+      pts: tr.querySelector('input.puntos-netos')?.value||'' 
+    }));
+    state.weeks.push({ rows });
+  });
+
+  // NUEVO: Recoger firmas de docentes
+  const firmasDocentes = document.querySelectorAll('.docente-firma-row');
+  state.firmas.docentes = Array.from(firmasDocentes).map(row => {
+    const preview = row.querySelector('.firma-preview');
+    return {
+      nombre: row.querySelector('.docente-firma-item').textContent,
+      firma: preview.style.display !== 'none' ? preview.src : ''
+    };
+  });
+
+  // NUEVO: Recoger firma del coordinador
+  const coordinadorRow = document.querySelector('.coordinador-firma-row');
+  if (coordinadorRow) {
+    const preview = coordinadorRow.querySelector('.firma-preview');
+    state.firmas.coordinador = {
+      nombre: coordinadorRow.querySelector('.coordinador-firma-item').textContent,
+      firma: preview.style.display !== 'none' ? preview.src : ''
+    };
   }
   
-  function downloadBlob(filename, mime, content){ 
-    const blob=new Blob([content], {type:mime}); 
-    const url=URL.createObjectURL(blob); 
-    const a=document.createElement('a'); 
-    a.href=url; 
-    a.download=filename; 
-    a.click(); 
-    URL.revokeObjectURL(url); 
+  return state;
+}
+
+// MEJORA: Aplicar estado con datos de formulario independientes
+function applyState(state){
+  if(!state) return;
+  
+  try{
+    document.getElementById('weeks-count').value = state.controls.weeks || 16;
+    document.getElementById('weeks-start').value = state.controls.start || '';
+    document.getElementById('weeks-snap').checked = !!state.controls.snap;
+    generateWeeksFromControls();
+  }catch(e){ console.warn('No se pudo regenerar estructura:', e); }
+  
+  // Aplicar datos del formulario si existen
+  if(state.formData) {
+    Object.keys(state.formData).forEach(fieldName => {
+      const field = document.querySelector(`[data-field="${fieldName}"]`);
+      if (field) {
+        if (field.tagName === 'SELECT') {
+          // Para selects, buscar la opción que coincida con el valor guardado
+          const options = field.options;
+          for (let i = 0; i < options.length; i++) {
+            if (options[i].text === state.formData[fieldName]) {
+              field.selectedIndex = i;
+              break;
+            }
+          }
+        } else {
+          field.value = state.formData[fieldName] || '';
+        }
+      }
+    });
   }
   
-  function exportExcel(){ 
-    downloadBlob('instrumento_clar.xls', 'application/vnd.ms-excel', buildExportHTML()); 
+  // Aplicar docentes
+  if(state.docente){ 
+    const list = document.getElementById('docentes-list'); 
+    list.innerHTML=''; 
+    state.docente.split(/\\n+/).forEach(n=>{ 
+      const row=document.createElement('div'); 
+      row.className='docente-row'; 
+      row.innerHTML='<textarea class="docente-item" placeholder="Nombre del docente"></textarea><div class="print-field docente-print" style="display:none"></div><button type="button" class="del-doc" title="Eliminar docente">×</button>'; 
+      row.querySelector('textarea').value=n; 
+      list.appendChild(row); 
+    }); 
+    syncDocentesToHidden();
   }
   
-  function exportWord(){ 
-    prepareForPrint();
-    const content = `
+  // Aplicar semanas
+  const weeks=document.querySelectorAll('#weeks-container .week');
+  weeks.forEach((weekEl, wi)=>{
+    const w=state.weeks[wi]; if(!w) return;
+    const trs=weekEl.querySelectorAll('tbody tr');
+    w.rows?.forEach((row, ri)=>{
+      const tr=trs[ri]; if(!tr) return;
+      const ta=tr.querySelector('textarea'); if(ta){ ta.value=row.desc||''; autoResize(ta); }
+      const min=tr.querySelector('input.minutos'); if(min){ min.value=row.min||''; }
+      const pts=tr.querySelector('input.puntos-netos'); if(pts){ pts.value=row.pts||''; }
+    });
+  });
+  
+  // NUEVO: Aplicar firmas
+  if (state.firmas) {
+    // Aplicar firmas de docentes
+    if (state.firmas.docentes && state.firmas.docentes.length > 0) {
+      const firmasContainer = document.getElementById('docentes-firmas-list');
+      firmasContainer.innerHTML = '';
+      
+      state.firmas.docentes.forEach(docente => {
+        const firmaRow = crearFilaDocente(docente.nombre);
+        if (docente.firma) {
+          const preview = firmaRow.querySelector('.firma-preview');
+          preview.src = docente.firma;
+          preview.style.display = 'block';
+        }
+        firmasContainer.appendChild(firmaRow);
+      });
+      
+      // Aplicar firma del coordinador
+      if (state.firmas.coordinador) {
+        const coordinadorRow = crearFilaCoordinador();
+        if (state.firmas.coordinador.firma) {
+          const preview = coordinadorRow.querySelector('.firma-preview');
+          preview.src = state.firmas.coordinador.firma;
+          preview.style.display = 'block';
+        }
+        firmasContainer.appendChild(coordinadorRow);
+      }
+    }
+  }
+  
+  // Aplicar reglamento y bibliografía
+  document.getElementById('eval-reglamento').value = state.reglamento||'';
+  document.getElementById('biblio-egrafia').value = state.biblio||'';
+  
+  computeAll();
+  syncPrintFields(); // Sincronizar campos para PDF
+}
+
+// ======= Exportación =======
+function prepareForPrint() {
+  syncPrintFields(); // Asegurar que todos los campos estén sincronizados
+}
+
+function exportPDF(){ 
+  prepareForPrint();
+  window.print(); 
+}
+
+function downloadBlob(filename, mime, content){ 
+  const blob=new Blob([content], {type:mime}); 
+  const url=URL.createObjectURL(blob); 
+  const a=document.createElement('a'); 
+  a.href=url; 
+  a.download=filename; 
+  a.click(); 
+  URL.revokeObjectURL(url); 
+}
+
+function exportExcel(){ 
+  downloadBlob('instrumento_clar.xls', 'application/vnd.ms-excel', buildExportHTML()); 
+}
+
+function exportWord(){ 
+  prepareForPrint();
+  const content = `
 <html xmlns:o='urn:schemas-microsoft-com:office:office' 
       xmlns:w='urn:schemas-microsoft-com:office:word' 
       xmlns='http://www.w3.org/TR/REC-html40'>
@@ -1552,100 +1902,129 @@ ${document.getElementById('summary-report')?.innerHTML || ''}
 ${document.getElementById('final-sections')?.outerHTML || ''}
 </body>
 </html>`;
-    
-    downloadBlob('instrumento_clar.doc', 'application/msword', content);
-  }
   
-  function exportCSV(){
-    const rows = [];
-    const header = ['Semana','Fila','Sesión','Modalidad','Descripción','Minutos','Puntos netos','Puntos acumulados'];
-    rows.push(header.join(','));
-    let weekIdx=0;
-    document.querySelectorAll('#weeks-container .week').forEach(week=>{
-      weekIdx++;
-      let running=0; let rowIdx=0;
-      week.querySelectorAll('tbody tr').forEach(tr=>{
-        rowIdx++;
-        const sesion = tr.children[0]?.textContent?.trim()||'';
-        const modalidad = tr.children[1]?.textContent?.trim()||'';
-        const desc = tr.querySelector('textarea')?.value?.replace(/\\n/g,' ')||'';
-        const minutos = tr.querySelector('input.minutos')?.value||'';
-        const pts = parseNum(tr.querySelector('input.puntos-netos')?.value||'')||0; running+=pts;
-        const acc = running.toFixed(2);
-        const line=[weekIdx,rowIdx,`"${sesion}"`,`"${modalidad}"`,`"${desc}"`,minutos,pts,acc];
-        rows.push(line.join(','));
-      });
+  downloadBlob('instrumento_clar.doc', 'application/msword', content);
+}
+
+function exportCSV(){
+  const rows = [];
+  const header = ['Semana','Fila','Sesión','Modalidad','Descripción','Minutos','Puntos netos','Puntos acumulados'];
+  rows.push(header.join(','));
+  let weekIdx=0;
+  document.querySelectorAll('#weeks-container .week').forEach(week=>{
+    weekIdx++;
+    let running=0; let rowIdx=0;
+    week.querySelectorAll('tbody tr').forEach(tr=>{
+      rowIdx++;
+      const sesion = tr.children[0]?.textContent?.trim()||'';
+      const modalidad = tr.children[1]?.textContent?.trim()||'';
+      const desc = tr.querySelector('textarea')?.value?.replace(/\\n/g,' ')||'';
+      const minutos = tr.querySelector('input.minutos')?.value||'';
+      const pts = parseNum(tr.querySelector('input.puntos-netos')?.value||'')||0; running+=pts;
+      const acc = running.toFixed(2);
+      const line=[weekIdx,rowIdx,`"${sesion}"`,`"${modalidad}"`,`"${desc}"`,minutos,pts,acc];
+      rows.push(line.join(','));
     });
-    const csv = rows.join('\\n');
-    downloadBlob('instrumento_clar.csv','text/csv;charset=utf-8',csv);
-  }
+  });
+  const csv = rows.join('\\n');
+  downloadBlob('instrumento_clar.csv','text/csv;charset=utf-8',csv);
+}
 
-  // ======= Eventos =======
-  document.addEventListener('DOMContentLoaded', function(){
-    // Inicializar gestión de cursos
-    initCourseManager();
-    
-    // Inicializar logos
-    initLogos();
-    
-    // Inicializar fecha por defecto
-    const today = new Date();
-    const monday = toMonday(today);
-    document.getElementById('weeks-start').valueAsDate = monday;
-    
-    // Inicializar gestión de docentes (solo una vez)
-    initDocentes();
-    
-    // Sincronizar campos cuando cambien
-    document.querySelectorAll('.master-header input, .master-header select, .master-header textarea').forEach(el => {
-      el.addEventListener('input', function() {
-        syncPrintFields();
-      });
-      el.addEventListener('change', function() {
-        syncPrintFields();
-      });
+// ======= Eventos =======
+document.addEventListener('DOMContentLoaded', function(){
+  // Inicializar gestión de cursos
+  initCourseManager();
+  
+  // Inicializar fecha por defecto
+  const today = new Date();
+  const monday = toMonday(today);
+  document.getElementById('weeks-start').valueAsDate = monday;
+  
+  // Inicializar gestión de docentes (solo una vez)
+  initDocentes();
+  
+  // Inicializar gestión de firmas
+  initFirmasDocentes();
+  
+  // Configurar coordinador por defecto
+  const carreraSelect = document.getElementById('fld-carrera');
+  asignarCoordinador(carreraSelect.value);
+  
+  // Event listener para cambio de carrera
+  carreraSelect.addEventListener('change', function() {
+    asignarCoordinador(this.value);
+    syncPrintFields(); // CORRECCIÓN: Sincronizar cuando cambie la carrera
+  });
+  
+  // Sincronizar docentes del encabezado con firmas inicialmente
+  syncDocentesToFirmas();
+  
+  // Sincronizar campos cuando cambien
+  document.querySelectorAll('.master-header input, .master-header select, .master-header textarea').forEach(el => {
+    el.addEventListener('input', function() {
+      syncPrintFields();
     });
-
-    // Event listeners
-    document.getElementById('create-weeks').addEventListener('click', generateWeeksFromControls);
-    document.getElementById('btn-export-excel').addEventListener('click', exportExcel);
-    document.getElementById('btn-export-word').addEventListener('click', exportWord);
-    document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
-    document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
-    document.getElementById('btn-clear').addEventListener('click', ()=>{ if(confirm('Esto borrará el contenido del curso actual. ¿Continuar?')){ clearCurrentCourse(); } });
-
-    // Auto-guardado cuando se modifiquen datos
-    document.addEventListener('input', () => {
-      if (currentCourseId) {
-        // Guardar automáticamente después de un delay
-        clearTimeout(window.autoSaveTimeout);
-        window.autoSaveTimeout = setTimeout(() => {
-          saveCurrentCourse();
-        }, 2000);
-      }
+    el.addEventListener('change', function() {
+      syncPrintFields();
     });
-
-    computeAll(); 
-    initAutosize(document);
-    syncPrintFields(); // Sincronizar campos inicialmente
   });
 
-  function clearCurrentCourse() {
-    if (!currentCourseId) return;
-    
-    if (confirm('¿Está seguro de limpiar todo el contenido del curso actual?')) {
-      // Restablecer a valores por defecto pero mantener el curso
-      const defaultData = getDefaultCourseData();
-      courses[currentCourseId].data = defaultData;
-      applyState(defaultData);
-      saveCourses();
-    }
-  }
+  // Event listeners
+  document.getElementById('create-weeks').addEventListener('click', generateWeeksFromControls);
+  // ELIMINADO: Event listener para Excel
+  document.getElementById('btn-export-word').addEventListener('click', exportWord);
+  document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
+  document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
+  document.getElementById('btn-clear').addEventListener('click', ()=>{ if(confirm('Esto borrará el contenido del curso actual. ¿Continuar?')){ clearCurrentCourse(); } });
 
-  function buildExportHTML() {
-    // Función para generar HTML de exportación (simplificada)
-    return document.documentElement.outerHTML;
+  // Event listener para firma del coordinador
+  document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('firma-docente')) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const preview = e.target.closest('.docente-firma-row, .coordinador-firma-row').querySelector('.firma-preview');
+        preview.src = ev.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Auto-guardado cuando se modifiquen datos
+  document.addEventListener('input', () => {
+    if (currentCourseId) {
+      // Guardar automáticamente después de un delay
+      clearTimeout(window.autoSaveTimeout);
+      window.autoSaveTimeout = setTimeout(() => {
+        saveCurrentCourse();
+      }, 2000);
+    }
+  });
+
+  computeAll(); 
+  initAutosize(document);
+  syncPrintFields(); // Sincronizar campos inicialmente
+});
+
+function clearCurrentCourse() {
+  if (!currentCourseId) return;
+  
+  if (confirm('¿Está seguro de limpiar todo el contenido del curso actual?')) {
+    // Restablecer a valores por defecto pero mantener el curso
+    const defaultData = getDefaultCourseData();
+    courses[currentCourseId].data = defaultData;
+    applyState(defaultData);
+    saveCourses();
   }
+}
+
+function buildExportHTML() {
+  // Función para generar HTML de exportación (simplificada)
+  return document.documentElement.outerHTML;
+}
 </script>
 </body>
 </html>
