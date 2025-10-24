@@ -88,6 +88,21 @@
   textarea, input[type="number"], input[type="text"], select{ width:100%; box-sizing:border-box; padding:5px; font-size:10pt; border:1px solid #d1d5db; border-radius:8px; background:#fff; min-height:24px; font-weight:normal }
   textarea{ resize:none; overflow-y:hidden; line-height:1.2; white-space:pre-wrap; word-break:break-word }
 
+  /* CORRECCIÓN: Estilos para campos de solo lectura en semanas para PDF */
+  .week .print-minutos,
+  .week .print-puntos-netos,
+  .week .print-puntos-acumulados {
+    display: none;
+    padding: 4px 6px;
+    border: none;
+    background: transparent;
+    color: #000;
+    font-size: 10pt;
+    width: 100%;
+    text-align: center;
+    font-weight: normal;
+  }
+
   /* Resumen semanal */
   .week-summary{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin:8px 0 0; font-size:10pt }
   .badge{ display:inline-block; padding:3px 8px; border-radius:999px; border:1px solid var(--border-2); background:var(--surface-2) }
@@ -246,7 +261,7 @@
   /* Accesibilidad visual */
   :focus{ outline:3px solid var(--focus); outline-offset:2px }
 
-  /* Impresión - CORRECCIÓN COMPLETA DE FIRMAS */
+  /* Impresión - CORRECCIÓN COMPLETA DE FIRMAS Y CAMPOS DE MINUTOS/PUNTOS */
   @media print{
     *{ 
       font-family: Arial, sans-serif !important; 
@@ -325,6 +340,22 @@
       display: none !important;
     }
     
+    /* CORRECCIÓN COMPLETA: Mostrar minutos y puntos en PDF */
+    .week input.minutos,
+    .week input.puntos-netos,
+    .week input.puntos-acumulados {
+      display: none !important;
+    }
+    
+    .week .print-minutos,
+    .week .print-puntos-netos,
+    .week .print-puntos-acumulados {
+      display: block !important;
+      color: #000 !important;
+      font-weight: normal !important;
+      background: transparent !important;
+    }
+    
     /* Mantener colores de secciones finales */
     .final-title{ 
       background:#d1fae5 !important;
@@ -348,7 +379,7 @@
     }
     
     /* Mostrar valores en las semanas */
-    .week textarea, .week input {
+    .week textarea {
       border: none !important;
       background: transparent !important;
       color: #000 !important;
@@ -1248,6 +1279,30 @@ function syncPrintFields() {
   docenteFirmaItems.forEach(item => {
     // Los nombres ya están sincronizados automáticamente en esta sección
   });
+
+  // CORRECCIÓN: Sincronizar minutos y puntos para PDF
+  document.querySelectorAll('#weeks-container .week').forEach(week => {
+    week.querySelectorAll('.minutos').forEach((minutoInput, index) => {
+      const printMinuto = minutoInput.closest('td').querySelector('.print-minutos');
+      if (printMinuto) {
+        printMinuto.textContent = minutoInput.value || '0';
+      }
+    });
+    
+    week.querySelectorAll('.puntos-netos').forEach((puntoInput, index) => {
+      const printPunto = puntoInput.closest('td').querySelector('.print-puntos-netos');
+      if (printPunto) {
+        printPunto.textContent = puntoInput.value || '0';
+      }
+    });
+    
+    week.querySelectorAll('.puntos-acumulados').forEach((acumuladoInput, index) => {
+      const printAcumulado = acumuladoInput.closest('td').querySelector('.print-puntos-acumulados');
+      if (printAcumulado) {
+        printAcumulado.textContent = acumuladoInput.value || '0';
+      }
+    });
+  });
 }
 
 // ======= CORRECCIÓN: Gestión de docentes mejorada =======
@@ -1434,16 +1489,25 @@ function asignarCoordinador(carrera) {
   syncPrintFields();
 }
 
-// ======= Filas de sesiones =======
+// ======= Filas de sesiones - MODIFICADA PARA AGREGAR CAMPOS DE IMPRESIÓN =======
 function createSessionRow(idx, session, modality, modClass){
   return `
     <tr class="${modClass}">
       <td>${session}</td>
       <td>${modality}</td>
       <td class="description-cell"><textarea aria-label="Descripción ${session} ${idx}" oninput="autoResize(this)"></textarea></td>
-      <td><input type="number" min="0" step="any" class="short-input minutos" aria-label="Minutos ${session} ${idx}" /></td>
-      <td><input type="number" min="0" step="any" class="short-input puntos-netos" aria-label="Puntos netos ${session} ${idx}" /></td>
-      <td><input type="number" class="short-input puntos-acumulados" readonly aria-label="Puntos acumulados ${session} ${idx}" /></td>
+      <td>
+        <input type="number" min="0" step="any" class="short-input minutos" aria-label="Minutos ${session} ${idx}" />
+        <div class="print-minutos" style="display:none"></div>
+      </td>
+      <td>
+        <input type="number" min="0" step="any" class="short-input puntos-netos" aria-label="Puntos netos ${session} ${idx}" />
+        <div class="print-puntos-netos" style="display:none"></div>
+      </td>
+      <td>
+        <input type="number" class="short-input puntos-acumulados" readonly aria-label="Puntos acumulados ${session} ${idx}" />
+        <div class="print-puntos-acumulados" style="display:none"></div>
+      </td>
     </tr>`;
 }
 
@@ -1514,28 +1578,82 @@ function tagExamWeek(){
   last.appendChild(badge);
 }
 
-// ======= Cálculos y EVALUACIÓN =======
+// ======= Cálculos y EVALUACIÓN - MODIFICADA PARA SINCRONIZAR CAMPOS DE IMPRESIÓN =======
 function computeAll(){
   let totalMinutes = 0;
-  document.querySelectorAll('#weeks-container .minutos').forEach(i=>{ const v=parseNum(i.value); if(v>=0) totalMinutes += v; });
+  let totalPuntosAcumulados = 0; // Variable para acumular puntos entre semanas
+  
+  document.querySelectorAll('#weeks-container .minutos').forEach(i=>{ 
+    const v=parseNum(i.value); 
+    if(v>=0) totalMinutes += v; 
+  });
 
   // Puntos acumulados por semana + totales por semana
   document.querySelectorAll('#weeks-container .week').forEach(week=>{
-    let runningPts = 0; const rows = week.querySelectorAll('.puntos-netos');
+    let runningPts = totalPuntosAcumulados; // Comenzar con el acumulado de semanas anteriores
+    const rows = week.querySelectorAll('.puntos-netos');
     const acc = week.querySelectorAll('.puntos-acumulados');
-    rows.forEach((inp, idx)=>{ const pts=(parseNum(inp.value)||0); runningPts += pts; if(acc[idx]) acc[idx].value = runningPts.toFixed(2); });
-    let weekMin = 0; let weekPts = 0;
-    week.querySelectorAll('.minutos').forEach(inp=>{ const m=(parseNum(inp.value)||0); weekMin += m; });
-    week.querySelectorAll('.puntos-netos').forEach(inp=>{ const p=(parseNum(inp.value)||0); weekPts += p; });
+    const printAcc = week.querySelectorAll('.print-puntos-acumulados');
+    
+    rows.forEach((inp, idx)=>{
+      const pts=(parseNum(inp.value)||0); 
+      runningPts += pts; 
+      
+      // Actualizar campos de entrada
+      if(acc[idx]) {
+        acc[idx].value = runningPts.toFixed(2);
+      }
+      
+      // CORRECCIÓN: Actualizar campos de impresión
+      if(printAcc[idx]) {
+        printAcc[idx].textContent = runningPts.toFixed(2);
+      }
+      
+      // CORRECCIÓN: Actualizar campos de minutos y puntos netos para impresión
+      const minutosInput = inp.closest('tr').querySelector('.minutos');
+      const puntosNetosInput = inp;
+      const printMinutos = inp.closest('tr').querySelector('.print-minutos');
+      const printPuntosNetos = inp.closest('tr').querySelector('.print-puntos-netos');
+      
+      if(printMinutos && minutosInput) printMinutos.textContent = minutosInput.value || '0';
+      if(printPuntosNetos) printPuntosNetos.textContent = puntosNetosInput.value || '0';
+    });
+    
+    // Guardar el último valor acumulado para la siguiente semana
+    if (rows.length > 0) {
+      totalPuntosAcumulados = runningPts;
+    }
+    
+    let weekMin = 0; 
+    let weekPts = 0;
+    week.querySelectorAll('.minutos').forEach(inp=>{ 
+      const m=(parseNum(inp.value)||0); 
+      weekMin += m; 
+    });
+    week.querySelectorAll('.puntos-netos').forEach(inp=>{ 
+      const p=(parseNum(inp.value)||0); 
+      weekPts += p; 
+    });
+    
     const weekHrs = weekMin/60;
-    const badgeMin = week.querySelector('[data-week-min] .val'); if(badgeMin) badgeMin.textContent = String(Math.round(weekMin));
-    const badgeHrs = week.querySelector('[data-week-hrs] .val'); if(badgeHrs) badgeHrs.textContent = weekHrs.toFixed(2);
-    const badgePts = week.querySelector('[data-week-pts]'); if(badgePts){ const val=badgePts.querySelector('.val'); if(val) val.textContent = weekPts.toFixed(2); badgePts.classList.toggle('warn', weekPts>100); }
+    const badgeMin = week.querySelector('[data-week-min] .val'); 
+    if(badgeMin) badgeMin.textContent = String(Math.round(weekMin));
+    const badgeHrs = week.querySelector('[data-week-hrs] .val'); 
+    if(badgeHrs) badgeHrs.textContent = weekHrs.toFixed(2);
+    const badgePts = week.querySelector('[data-week-pts]'); 
+    if(badgePts){ 
+      const val=badgePts.querySelector('.val'); 
+      if(val) val.textContent = weekPts.toFixed(2); 
+      badgePts.classList.toggle('warn', weekPts>100); 
+    }
   });
 
-  const totalHours = totalMinutes / 60; const clarTotal = totalHours / CLAR_DIVISOR;
+  const totalHours = totalMinutes / 60; 
+  const clarTotal = totalHours / CLAR_DIVISOR;
   const result = document.getElementById('validation-result');
-  if(result){ result.textContent = `CLAR total (Σ horas / ${CLAR_DIVISOR}): ${clarTotal.toFixed(2)}  ·  Horas: ${totalHours.toFixed(2)}  ·  Minutos: ${totalMinutes.toFixed(0)}`; }
+  if(result){ 
+    result.textContent = `CLAR total (Σ horas / ${CLAR_DIVISOR}): ${clarTotal.toFixed(2)}  ·  Horas: ${totalHours.toFixed(2)}  ·  Minutos: ${totalMinutes.toFixed(0)}`; 
+  }
 
   tagExamWeek();
   computeEvaluationSection();
@@ -1840,9 +1958,10 @@ function applyState(state){
   syncPrintFields(); // Sincronizar campos para PDF
 }
 
-// ======= Exportación =======
+// ======= Exportación - MODIFICADA PARA SINCRONIZAR ANTES DE PDF =======
 function prepareForPrint() {
   syncPrintFields(); // Asegurar que todos los campos estén sincronizados
+  computeAll(); // Asegurar que todos los cálculos estén actualizados
 }
 
 function exportPDF(){ 
@@ -1970,6 +2089,20 @@ document.addEventListener('DOMContentLoaded', function(){
     el.addEventListener('change', function() {
       syncPrintFields();
     });
+  });
+
+  // Event listeners para minutos y puntos para sincronizar automáticamente
+  document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('minutos') || 
+        e.target.classList.contains('puntos-netos') || 
+        e.target.classList.contains('puntos-acumulados')) {
+      // Sincronizar inmediatamente para campos de impresión
+      const input = e.target;
+      const printField = input.closest('td').querySelector('.print-' + input.className);
+      if (printField) {
+        printField.textContent = input.value || '0';
+      }
+    }
   });
 
   // Event listeners
