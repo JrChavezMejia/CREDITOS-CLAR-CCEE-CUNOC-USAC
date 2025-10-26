@@ -584,7 +584,7 @@
     <label for="weeks-count">Semanas:
       <input type="number" id="weeks-count" min="1" max="40" value="16" />
     </label>
-    <label for="weeks-start">Inicio (YYYY-MM-DD):
+    <label for="weeks-start">Inicio (DÍA-MES-AÑO):
       <input type="date" id="weeks-start" />
     </label>
     <label style="display:flex;align-items:center;gap:6px" for="weeks-snap">
@@ -639,7 +639,7 @@
         </div>
         
         <div class="row">
-          <label for="fld-clar">Créditos CLAR (Σ horas/24):</label>
+          <label for="fld-clar">CLAR (Σ horas/24):</label>
           <input id="fld-clar" type="text" data-field="clar_credit" value="0.00" readonly
                  title="Se calcula automáticamente con la sumatoria final" />
           <div class="print-field" id="print-clar" style="display:none">0.00</div>
@@ -793,10 +793,8 @@
   </div>
 
   <div class="export-actions">
-    <!-- ELIMINADO: Botón Excel -->
-    <button id="btn-export-word" class="btn" style="background:#6366f1">Exportar a Word</button>
+    <!-- ELIMINADO: Botones de Word y CSV -->
     <button id="btn-export-pdf" class="btn warn">Exportar a PDF</button>
-    <button id="btn-export-csv" class="btn ghost">Exportar a CSV</button>
   </div>
 </div>
 
@@ -811,6 +809,81 @@ let warnedExamen = false;
 let courses = {};
 let currentCourseId = null;
 let docenteEventInitialized = false; // Bandera para evitar múltiples inicializaciones
+
+// ======= NUEVA FUNCIÓN: Actualizar solo las fechas de las semanas =======
+function updateWeekDates() {
+  const startEl = document.getElementById('weeks-start');
+  const snapEl = document.getElementById('weeks-snap');
+  
+  const baseRaw = startEl.value ? parseLocalDate(startEl.value) : new Date();
+  if (isNaN(baseRaw.getTime())) {
+    alert('Fecha inválida. Use el selector de fecha.');
+    return;
+  }
+  
+  const base = snapEl && snapEl.checked ? toMonday(baseRaw) : baseRaw;
+  const weeks = document.querySelectorAll('#weeks-container .week');
+  
+  weeks.forEach((weekEl, index) => {
+    const startDate = addDays(base, 7 * index);
+    const monday = toMonday(startDate);
+    const friday = endOfWorkWeek(monday);
+    
+    // Actualizar título y rango de fechas
+    const title = weekEl.querySelector('h2');
+    const range = weekEl.querySelector('.week-range');
+    
+    if (title) {
+      title.textContent = `Semana ${index + 1} — Inicio: ${formatDMY(startDate)}`;
+    }
+    
+    if (range) {
+      range.textContent = `Semana del ${formatDMY(monday)} al ${formatDMY(friday)} (Lun–Vie)`;
+    }
+  });
+}
+
+// ======= MODIFICACIÓN: Función generateWeeksFromControls actualizada =======
+function generateWeeksFromControls() {
+  try {
+    const countEl = document.getElementById('weeks-count');
+    const startEl = document.getElementById('weeks-start');
+    const snapEl = document.getElementById('weeks-snap');
+    const n = parseInt(countEl.value, 10);
+    
+    if (!Number.isInteger(n) || n <= 0) {
+      alert('Ingrese un número válido de semanas.');
+      return;
+    }
+    
+    const baseRaw = startEl.value ? parseLocalDate(startEl.value) : new Date();
+    if (isNaN(baseRaw.getTime())) {
+      alert('Fecha inválida. Use el selector de fecha.');
+      return;
+    }
+    
+    const base = snapEl && snapEl.checked ? toMonday(baseRaw) : baseRaw;
+    const container = document.getElementById('weeks-container');
+    const existingWeeks = container.querySelectorAll('.week').length;
+    
+    // Si la cantidad de semanas es diferente, regenerar todo
+    if (n !== existingWeeks) {
+      container.innerHTML = '';
+      weekCount = 0;
+      for (let i = 0; i < n; i++) addWeek(addDays(base, 7 * i));
+      initDocentes();
+      initAutosize(document);
+    } else {
+      // Si la cantidad es la misma, solo actualizar las fechas
+      updateWeekDates();
+    }
+    
+    computeAll();
+  } catch (e) {
+    console.error(e);
+    alert('No se pudieron crear las semanas desde la barra.');
+  }
+}
 
 // ======= Gestión de Cursos - VERSIÓN MEJORADA =======
 function initCourseManager() {
@@ -1771,25 +1844,6 @@ function computeSummaryReport(){
   if(mount) mount.innerHTML = html;
 }
 
-// ======= Controladores - CORREGIDO =======
-function generateWeeksFromControls(){
-  try{
-    const countEl=document.getElementById('weeks-count');
-    const startEl=document.getElementById('weeks-start');
-    const snapEl=document.getElementById('weeks-snap');
-    const n=parseInt(countEl.value,10);
-    if(!Number.isInteger(n)||n<=0){ alert('Ingrese un número válido de semanas.'); return; }
-    const baseRaw = startEl.value ? parseLocalDate(startEl.value) : new Date();
-    if(isNaN(baseRaw.getTime())){ alert('Fecha inválida. Use el selector de fecha.'); return; }
-    const base = snapEl && snapEl.checked ? toMonday(baseRaw) : baseRaw;
-    const container=document.getElementById('weeks-container'); container.innerHTML=''; weekCount=0;
-    for(let i=0;i<n;i++) addWeek(addDays(base, 7*i));
-    initDocentes(); // Inicializar docentes solo una vez
-    initAutosize(document);
-    computeAll();
-  }catch(e){ console.error(e); alert('No se pudieron crear las semanas desde la barra.'); }
-}
-
 // ======= MEJORA: Persistencia mejorada con datos de formulario independientes =======
 function collectCurrentState(){
   const state={
@@ -2052,6 +2106,23 @@ function exportCSV(){
   downloadBlob('instrumento_clar.csv','text/csv;charset=utf-8',csv);
 }
 
+function clearCurrentCourse() {
+  if (!currentCourseId) return;
+  
+  if (confirm('¿Está seguro de limpiar todo el contenido del curso actual?')) {
+    // Restablecer a valores por defecto pero mantener el curso
+    const defaultData = getDefaultCourseData();
+    courses[currentCourseId].data = defaultData;
+    applyState(defaultData);
+    saveCourses();
+  }
+}
+
+function buildExportHTML() {
+  // Función para generar HTML de exportación (simplificada)
+  return document.documentElement.outerHTML;
+}
+
 // ======= Eventos =======
 document.addEventListener('DOMContentLoaded', function(){
   // Inicializar gestión de cursos
@@ -2107,10 +2178,17 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Event listeners
   document.getElementById('create-weeks').addEventListener('click', generateWeeksFromControls);
-  // ELIMINADO: Event listener para Excel
-  document.getElementById('btn-export-word').addEventListener('click', exportWord);
+  
+  // NUEVO: Event listener para actualizar solo las fechas cuando cambie la fecha de inicio
+  document.getElementById('weeks-start').addEventListener('change', function() {
+    // Solo actualizar fechas si ya existen semanas
+    const existingWeeks = document.querySelectorAll('#weeks-container .week').length;
+    if (existingWeeks > 0) {
+      updateWeekDates();
+    }
+  });
+  
   document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
-  document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
   document.getElementById('btn-clear').addEventListener('click', ()=>{ if(confirm('Esto borrará el contenido del curso actual. ¿Continuar?')){ clearCurrentCourse(); } });
 
   // Event listener para firma del coordinador
@@ -2144,23 +2222,6 @@ document.addEventListener('DOMContentLoaded', function(){
   initAutosize(document);
   syncPrintFields(); // Sincronizar campos inicialmente
 });
-
-function clearCurrentCourse() {
-  if (!currentCourseId) return;
-  
-  if (confirm('¿Está seguro de limpiar todo el contenido del curso actual?')) {
-    // Restablecer a valores por defecto pero mantener el curso
-    const defaultData = getDefaultCourseData();
-    courses[currentCourseId].data = defaultData;
-    applyState(defaultData);
-    saveCourses();
-  }
-}
-
-function buildExportHTML() {
-  // Función para generar HTML de exportación (simplificada)
-  return document.documentElement.outerHTML;
-}
 </script>
 </body>
 </html>
