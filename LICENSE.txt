@@ -1,0 +1,31 @@
+Licencia de Uso Institucional Gratuito (basada en Creative Commons BY-NC-ND 4.0)
+
+© Dr. José Rodolfo Chávez Mejía, 2025
+
+Este programa fue desarrollado de manera independiente por el Dr. José Rodolfo Chávez Mejía, a partir de insumos en formato Excel proporcionados por la Unidad de Planificación Curricular del CUNOC – Universidad de San Carlos de Guatemala (USAC). Dichos archivos sirvieron únicamente como referencia inicial y no constituyen parte del desarrollo informático.
+
+El autor otorga a la División de Ciencias Económicas (CCEE) del CUNOC-USAC una autorización gratuita, no exclusiva e indefinida para el uso de este programa en actividades académicas, administrativas o de investigación dentro de dicha división.
+
+Este trabajo está protegido por la licencia Creative Commons Atribución-NoComercial-SinDerivadas 4.0 Internacional (CC BY-NC-ND 4.0).
+
+Bajo esta licencia:
+
+1. **Atribución** — Debe otorgarse crédito adecuado al autor (Dr. José Rodolfo Chávez Mejía), proporcionando un enlace a esta licencia e indicando si se realizaron cambios. Puede hacerse de cualquier manera razonable, pero no de forma que sugiera que el autor avala un uso no autorizado.
+2. **No Comercial** — No puede utilizar el material con fines comerciales.
+3. **Sin Derivadas** — No puede modificar, transformar ni crear obras derivadas a partir de este material sin autorización expresa del autor.
+
+No se pueden aplicar términos legales o medidas tecnológicas que restrinjan legalmente a otros de hacer cualquier cosa que la licencia permita.
+
+Licencia completa: https://creativecommons.org/licenses/by-nc-nd/4.0/
+
+---
+
+### Limitaciones de uso
+
+El uso gratuito se limita exclusivamente a la División de Ciencias Económicas (CCEE) del CUNOC-USAC.  
+Cualquier otro uso, distribución, instalación o adaptación por fuera de dicha división —incluyendo otras dependencias de la USAC o terceros— requiere autorización previa y por escrito del autor.
+
+Para solicitudes de uso o autorización, contactar a:
+Dr. José Rodolfo Chávez Mejía  
+[licjosechavez@yahoo.es
+Tel: (+502) 52133500
