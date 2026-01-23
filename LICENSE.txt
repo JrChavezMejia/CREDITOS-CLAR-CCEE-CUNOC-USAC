@@ -2,30 +2,55 @@ Licencia de Uso Institucional Gratuito (basada en Creative Commons BY-NC-ND 4.0)
 
 © Dr. José Rodolfo Chávez Mejía, 2025
 
+Actualización 2026
+
+Actualización 2026 (enero 2026): Esta versión incorpora únicamente la actualización de los nombres de autoridades vigentes para el año 2026. No se realizaron cambios funcionales, técnicos ni de alcance en el programa, y se mantienen sin modificación los términos y condiciones de la presente licencia.
+Versión del programa: 2026.1
+
+Autoridades institucionales vigentes (2026)
+
+(Bloque informativo. Actualizar únicamente nombres/cargos según corresponda.)
+
+Universidad de San Carlos de Guatemala (USAC): [Nombre y cargo]
+
+Centro Universitario de Occidente (CUNOC): [Nombre y cargo]
+
+División de Ciencias Económicas (CCEE), CUNOC-USAC: [Nombre y cargo]
+
+Unidad/Departamento responsable del uso del programa en CCEE: [Nombre y cargo]
+
+Declaración de autoría y origen de insumos
+
 Este programa fue desarrollado de manera independiente por el Dr. José Rodolfo Chávez Mejía, a partir de insumos en formato Excel proporcionados por la Unidad de Planificación Curricular del CUNOC – Universidad de San Carlos de Guatemala (USAC). Dichos archivos sirvieron únicamente como referencia inicial y no constituyen parte del desarrollo informático.
+
+Autorización institucional
 
 El autor otorga a la División de Ciencias Económicas (CCEE) del CUNOC-USAC una autorización gratuita, no exclusiva e indefinida para el uso de este programa en actividades académicas, administrativas o de investigación dentro de dicha división.
 
-Este trabajo está protegido por la licencia Creative Commons Atribución-NoComercial-SinDerivadas 4.0 Internacional (CC BY-NC-ND 4.0).
+Marco de licencia
+
+Este trabajo está protegido por la licencia Creative Commons Atribución–NoComercial–SinDerivadas 4.0 Internacional (CC BY-NC-ND 4.0).
 
 Bajo esta licencia:
 
-1. **Atribución** — Debe otorgarse crédito adecuado al autor (Dr. José Rodolfo Chávez Mejía), proporcionando un enlace a esta licencia e indicando si se realizaron cambios. Puede hacerse de cualquier manera razonable, pero no de forma que sugiera que el autor avala un uso no autorizado.
-2. **No Comercial** — No puede utilizar el material con fines comerciales.
-3. **Sin Derivadas** — No puede modificar, transformar ni crear obras derivadas a partir de este material sin autorización expresa del autor.
+Atribución — Debe otorgarse crédito adecuado al autor (Dr. José Rodolfo Chávez Mejía), proporcionando un enlace a esta licencia e indicando si se realizaron cambios. Puede hacerse de cualquier manera razonable, pero no de forma que sugiera que el autor avala un uso no autorizado.
+
+No Comercial — No puede utilizar el material con fines comerciales.
+
+Sin Derivadas — No puede modificar, transformar ni crear obras derivadas a partir de este material sin autorización expresa del autor.
 
 No se pueden aplicar términos legales o medidas tecnológicas que restrinjan legalmente a otros de hacer cualquier cosa que la licencia permita.
 
 Licencia completa: https://creativecommons.org/licenses/by-nc-nd/4.0/
 
----
+Limitaciones de uso
 
-### Limitaciones de uso
-
-El uso gratuito se limita exclusivamente a la División de Ciencias Económicas (CCEE) del CUNOC-USAC.  
+El uso gratuito se limita exclusivamente a la División de Ciencias Económicas (CCEE) del CUNOC-USAC.
 Cualquier otro uso, distribución, instalación o adaptación por fuera de dicha división —incluyendo otras dependencias de la USAC o terceros— requiere autorización previa y por escrito del autor.
 
-Para solicitudes de uso o autorización, contactar a:
-Dr. José Rodolfo Chávez Mejía  
-[licjosechavez@yahoo.es
-Tel: (+502) 52133500
+Contacto para solicitudes de autorización
+
+Dr. José Rodolfo Chávez Mejía
+Correo: licjosechavez@yahoo.es
+
+Tel: (+502) 5213-3500
